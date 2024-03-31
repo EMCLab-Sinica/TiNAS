@@ -1,0 +1,28 @@
+{
+    "NAS_SETTINGS_GENERAL": {
+        "DATASET": "CIFAR10"
+    },
+    "NAS_SSOPTIMIZER_SETTINGS": {
+        "SUBNET_SAMPLE_SIZE" : 1000
+    },
+    "NAS_EVOSEARCH_SETTINGS": {
+        "POP_SIZE": 8,
+        "GENERATIONS": 15,
+        "FIXED_NUM_CPU_WORKERS": 4
+    },
+    "TINAS": {
+        "STAGE1_SETTINGS": {
+            "DROPPING_BLOCK_LEVEL": {
+                "MOBILENET_NUM_LAYERS_EXPLICIT": [1],
+                "SUPPORT_SKIP": [false]
+            },
+            "DROPPING_NET_LEVEL": {
+                "WIDTH_MULTIPLIER": [0.2, 0.3, 0.4, 0.5],
+                "INPUT_RESOLUTION": [28]
+            }
+        },
+        "STAGE2_SETTINGS": {
+            "BEST_STABLE_GENERATIONS": 5
+        }
+    }
+}

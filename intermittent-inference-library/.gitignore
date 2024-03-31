@@ -1,0 +1,17 @@
+Debug/
+Release/
+.launches/
+.DS_Store
+.settings/
+/dsplib/
+/driverlib/
+/targetConfigs/
+/BuildOutputs/
+/.metadata/
+/Measurements/
+/.energytrace/
+/.jxbrowser-data/
+/dvt/
+/RemoteSystemsTempFiles/
+*.c.bak
+build/

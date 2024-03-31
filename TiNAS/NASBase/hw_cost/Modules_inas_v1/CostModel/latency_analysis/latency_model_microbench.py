@@ -1,0 +1,73 @@
+import sys, os
+
+# PARAM_FRAM_TO_SRAM_LINREG_M = 64
+# PARAM_FRAM_TO_SRAM_LINREG_B = 424
+# PARAM_SRAM_TO_FRAM_LINREG_M = 64
+# PARAM_SRAM_TO_FRAM_LINREG_B = 422
+
+# PARAM_FRAM_TO_SRAM_LINREG_M = 64
+# PARAM_FRAM_TO_SRAM_LINREG_B = 424
+# PARAM_SRAM_TO_FRAM_LINREG_M = 64
+# PARAM_SRAM_TO_FRAM_LINREG_B = 422
+
+# Profile updated 2024/01/27
+PARAM_FRAM_TO_SRAM_LINREG_M = 64
+PARAM_FRAM_TO_SRAM_LINREG_B = 430
+PARAM_SRAM_TO_FRAM_LINREG_M = 64
+PARAM_SRAM_TO_FRAM_LINREG_B = 421
+
+# PARAM_LEAVECMAC_LINREG_M = 1.5
+# PARAM_LEAVECMAC_LINREG_B = 616
+
+#PARAM_LEAVECMAC_LINREG_M = 1.5
+#PARAM_LEAVECMAC_LINREG_B = 116
+
+PARAM_LEAVECMAC_LINREG_M = 1.5
+PARAM_LEAVECMAC_LINREG_B = 622
+
+
+#PARAM_ADD_LATENCY = 12
+#PARAM_MULTIPLY_LATENCY = 44
+#PARAM_DIVIDE_LATENCY = 160
+#PARAM_MODULO_LATENCY = 160
+#PARAM_MAX_LATENCY = 14
+PARAM_ADD_LATENCY = 12
+PARAM_MULTIPLY_LATENCY = 45
+PARAM_DIVIDE_LATENCY = 161
+PARAM_MODULO_LATENCY = 161
+PARAM_MAX_LATENCY = 15
+
+
+
+
+
+######################################################
+#   Linear predictions
+######################################################
+def predict_latency(tr_type, data_size):
+    if tr_type == "FRAM_TO_SRAM":
+        y = (PARAM_FRAM_TO_SRAM_LINREG_M * data_size) + PARAM_FRAM_TO_SRAM_LINREG_B
+    elif tr_type == "SRAM_TO_FRAM":
+        y = (PARAM_SRAM_TO_FRAM_LINREG_M * data_size) + PARAM_SRAM_TO_FRAM_LINREG_B
+
+    elif tr_type == "LEAVECMAC":
+        y = (PARAM_LEAVECMAC_LINREG_M * data_size) + PARAM_LEAVECMAC_LINREG_B
+    
+    elif tr_type == "MATHOPS_ADD":
+        y = PARAM_ADD_LATENCY
+    elif tr_type == "MATHOPS_DIV":
+        y = PARAM_DIVIDE_LATENCY
+    elif tr_type == "MATHOPS_MUL":
+        y = PARAM_MULTIPLY_LATENCY
+    elif tr_type == "MATHOPS_MOD":
+        y = PARAM_MODULO_LATENCY
+    elif tr_type == "MATHOPS_MAX":
+        y = PARAM_MAX_LATENCY
+
+    else:
+        sys.exit("Error: predict_latency: unknown")
+
+    return y
+
+
+

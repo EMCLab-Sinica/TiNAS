@@ -1,0 +1,296 @@
+cnn/cnn.c
+
+cnn/cnn_add.c
+// ============== BEGIN _intra_tile_add COST MODEL ==============
+// Number of loop iterations: Tr*Tc*Tn
+// Addressing: 2*MUL + 4*ADD
+// Computation: 1*ADD
+// =============== END _intra_tile_add COST MODEL ===============
+
+// =============== BEGIN CNN_Add COST MODEL ===============
+// Fetch IFM: N/Tn * R/Tr * C/Tc * _fetch_ifm_tile_RCN_ext
+// Fetch weights: N/Tn * R/Tr * C/Tc * _fetch_ifm_tile_RCN_ext
+// Fetch OFM: 0
+// Addressing: 2*MUL + 2*ADD
+// Computation: N/Tn * R/Tr * C/Tc * _intra_tile_add
+// Tile output backup: N/Tn * R/Tr * C/Tc / preSz * _save_ofm_tile_RCN_ext
+// ================ END CNN_Add COST MODEL ================
+
+
+cnn/cnn_add_intermittent.c
+// =============== BEGIN CNN_Intermittent_Add COST MODEL ===============
+// Number of power cycles: N/Tn * R/Tr * C/Tc / preSz
+// Fetch tile idx: DMA READ 4 Q15
+// Fetch IFM: _fetch_ifm_tile_RCN_ext
+// Fetch weights: _fetch_ifm_tile_RCN_ext (for every tile)
+// Fetch OFM: 0 (no partial sums)
+// Addressing: (2*MUL + 2*ADD) (same as stable power for one tile)
+// Computation: _intra_tile_add (same as stable power for one tile)
+// Tile output backup: _save_ofm_tile_RCN_ext (same as stable power for one tile)
+// Tile idx backup: DMA WRITE 4 Q15
+// ================ END CNN_Intermittent_Add COST MODEL ================
+
+
+cnn/cnn_batchnorm.c
+// ============== BEGIN _intra_tile_batchnorm COST MODEL ==============
+// Number of loop iterations: (Tr*Tc*Tn)
+// Addressing: 2*MUL + 7*ADD
+// Computation: SUB + MPY + DIV + ADD
+// =============== END _intra_tile_batchnorm COST MODEL ===============
+
+// =============== BEGIN CNN_BatchNormalization COST MODEL ===============
+// Fetch IFM: (N/Tn * R/Tr * C/Tc) * _fetch_ifm_tile_RCN_ext
+// Fetch weights: (N/Tn) * SPI_READ(Tn*Q15_SIZE) * 4
+// Fetch OFM: 0 (no partial sums)
+// Addressing (for weights): (N/Tn) * (7*ADD)
+// Computation: (N/Tn * R/Tr * C/Tc) * _intra_tile_batchnorm
+// Tile output backup: (N/Tn * R/Tr * C/Tc / preSz) * _save_ofm_tile_RCN_ext
+// ================ END CNN_BatchNormalization COST MODEL ================
+
+
+cnn/cnn_batchnorm_intermittent.c
+// =============== BEGIN CNN_BatchNormalization COST MODEL ===============
+// Number of power cycles: M/Tm * R/Tr * C/Tc / preSz
+// Fetch tile idx: DMA READ 4 Q15
+// Fetch IFM: _fetch_ifm_tile_RCN_ext
+// Fetch weights: 4*Tn (for every tile)
+// Fetch OFM: 0 (no partial sums)
+// Addressing: (7*ADD) (same as stable power for one tile)
+// Computation: _intra_tile_batchnorm (same as stable power for one tile)
+// Tile output backup: _save_ofm_tile_RCN_ext (same as stable power for one tile)
+// Tile idx backup: DMA WRITE 4 Q15
+// ================ END CNN_BatchNormalization COST MODEL ================
+
+
+cnn/cnn_conv_tiled_dw.c
+// ============== BEGIN _intra_tile_conv_dw COST MODEL ==============
+// Number of loop iterations: (Tr*Tc*Kh*Kw*Tm)
+// Addressing (IFM_ORIENTED): 12*MUL + 11*ADD
+// Addressing (others):       10*MUL + 11*ADD
+// Computation: 1*MUL
+// =============== END _intra_tile_conv_dw COST MODEL ===============
+
+// =============== BEGIN _CNN_LayerConvDW_Tiled_OFM COST MODEL ===============
+// Fetch IFM: (R/Tr * C/Tc* N/Tn) * _fetch_ifm_tile_RCN_ext
+// Fetch weights: (R/Tr * C/Tc * N/Tn) * _fetch_weights_tile_RCMN_ext
+// Fetch OFM: 0
+// Computation: (R/Tr * C/Tc * N/Tn) * _intra_tile_conv_dw
+// Tile output backup: (R/Tr * C/Tc * N/Tn / preSz) * _save_ofm_tile_RCN_ext
+// ================ END _CNN_LayerConvDW_Tiled_OFM COST MODEL ================
+
+// ============== BEGIN _CNN_Intermittent_LayerConvDW_Tiled_OFM COST MODEL ==============
+// Number of power cycles: (R/Tr * C/Tc * N/Tn / preSz)
+// Fetch tile idx: SPI_READ(10)
+// Fetch IFM: preSz * _fetch_ifm_tile_RCN_ext
+// Fetch weights: preSz * _fetch_weights_tile_RCMN_ext
+// Fetch OFM: 0
+// Addressing: 9*MUL + 8*ADD + 2*SUB + (preSz-1)*ADD
+// Computation: preSz * _intra_tile_conv_dw
+// Tile output backup: _save_ofm_tile_RCN_ext
+// Tile idx backup: SPI_WRITE(10)
+// =============== END _CNN_Intermittent_LayerConvDW_Tiled_OFM COST MODEL ===============
+
+// =============== BEGIN _CNN_LayerConvDW_Tiled_IFM COST MODEL ===============
+// Fetch IFM: (R/Tr * C/Tc * N/Tn) * _fetch_ifm_tile_RCN_ext
+// Fetch weights: (R/Tr * C/Tc * N/Tn) * _fetch_weights_tile_RCMN_ext
+// Fetch OFM: 0
+// Addressing (for OFM buffer): (R/Tr * C/Tc * N/Tn) * ADD +                     /* for every tile */
+//                              (R/Tr * C/Tc * N/Tn / preSz) * (1*MPY + 2*ADD)   /* reset after each preservation */
+// Computation: (R/Tr * C/Tc * N/Tn) * _intra_tile_conv_dw
+// Tile output backup: (R/Tr * C/Tc * N/Tn / preSz) * _save_ofm_tile_RCN_ext
+// ================ END _CNN_LayerConvDW_Tiled_IFM COST MODEL ================
+
+// ============== BEGIN _CNN_Intermittent_LayerConvDW_Tiled_IFM COST MODEL ==============
+// Number of power cycles: (R/Tr * C/Tc * N/Tn / preSz)
+// Fetch tile idx: SPI_READ(10)
+// Fetch IFM: preSz * _fetch_ifm_tile_RCN_ext
+// Fetch weights: preSz * _fetch_weights_tile_RCMN_ext
+// Fetch OFM: 0
+// Addressing: 11*MUL + 8*ADD + 2*SUB + (preSz-1)*ADD
+// Computation: preSz * _intra_tile_conv_dw
+// Tile output backup: _save_ofm_tile_RCN_ext
+// Tile idx backup: SPI_WRITE(10)
+// =============== END _CNN_Intermittent_LayerConvDW_Tiled_IFM COST MODEL ===============
+
+// =============== BEGIN _CNN_LayerConvDW_Tiled_WEI COST MODEL ===============
+// Fetch IFM: (N/Tn * R/Tr * C/Tc) * _fetch_ifm_tile_RCN_ext
+// Fetch weights: (N/Tn) * _fetch_weights_tile_RCMN_ext
+// Fetch OFM: 0
+// Addressing (for OFM buffer): (N/Tn * R/Tr * C/Tc) * ADD +                     /* for every tile */
+//                              (N/Tn * R/Tr * C/Tc / preSz) * (1*MPY + 2*ADD)   /* reset after each preservation */
+// Computation: (N/Tn * R/Tr * C/Tc) * _intra_tile_conv_dw
+// Tile output backup: (N/Tn * R/Tr * C/Tc / preSz) * _save_ofm_tile_RCN_ext
+// ================ END _CNN_LayerConvDW_Tiled_WEI COST MODEL ================
+
+// ============== BEGIN _CNN_Intermittent_LayerConvDW_Tiled_WEI COST MODEL ==============
+// Number of power cycles: (N/Tn * R/Tr * C/Tc / preSz)
+// Fetch tile idx: SPI_READ(10)
+// Fetch IFM: preSz * _fetch_ifm_tile_RCN_ext
+// Fetch weights: _fetch_weights_tile_RCMN_ext
+// Fetch OFM: 0
+// Addressing: 11*MUL + 8*ADD + 2*SUB + (preSz-1)*ADD
+// Computation: preSz * _intra_tile_conv_dw
+// Tile output backup: _save_ofm_tile_RCN_ext
+// Tile idx backup: SPI_WRITE(10)
+// =============== END _CNN_Intermittent_LayerConvDW_Tiled_WEI COST MODEL ===============
+
+
+cnn/cnn_conv_tiled_std.c
+// ============== BEGIN _intra_tile_conv COST MODEL ==============
+// Number of loop iterations: (Tr*Tc*Kh*Kw*Tm)
+// Addressing:
+//     input & weights: 7*MUL + 5*ADD
+//     outputs (IFM_ORIENTED): 5*MUL + 3*ADD
+//     outputs (others): 3*MUL + 3*ADD
+// Computation: 1*CNN_VectorMAC + 1*__saturated_add_q15 (assume similar to ADD)
+// =============== END _intra_tile_conv COST MODEL ===============
+
+// =============== BEGIN _CNN_LayerConv_Tiled_OFM COST MODEL ===============
+// Fetch IFM: (R/Tr * C/Tc * M/Tm * N/Tn) * _fetch_ifm_tile_RCN_ext
+// Fetch weights: (R/Tr * C/Tc * M/Tm * N/Tn) * _fetch_weights_tile_RCMN_ext
+// Fetch OFM: 0   // No need to fetch partial sums, as they are all in VM in the case of OFM reuse
+// Computation: (R/Tr * C/Tc * M/Tm * N/Tn) * _intra_tile_conv
+// Tile output backup: (R/Tr * C/Tc * M/Tm * N/Tn / preSz) * _save_ofm_tile_RCN_ext
+// ================ END _CNN_LayerConv_Tiled_OFM COST MODEL ================
+
+// ============== BEGIN _CNN_Intermittent_LayerConv_Tiled_OFM COST MODEL ==============
+// Number of power cycles: (R/Tr * C/Tc * M/Tm * N/Tn / preSz)
+// Fetch tile idx: SPI_READ(10)
+// Fetch IFM: preSz * _fetch_ifm_tile_RCN_ext
+// Fetch weights: preSz * _fetch_weights_tile_RCMN_ext
+// Fetch OFM: _fetch_ofm_tile_RCN_ext (in most cases, except for ti==0)
+// Addressing: 9*MUL + 8*ADD + 2*SUB + (preSz-1)*ADD
+// Computation: preSz * _intra_tile_conv
+// Tile output backup: _save_ofm_tile_RCN_ext
+// Tile idx backup: SPI_WRITE(10)
+// =============== END _CNN_Intermittent_LayerConv_Tiled_OFM COST MODEL ===============
+
+// =============== BEGIN _CNN_LayerConv_Tiled_IFM COST MODEL ===============
+// Fetch IFM: (R/Tr * C/Tc * N/Tn) * _fetch_ifm_tile_RCN_ext
+// Fetch weights: (R/Tr * C/Tc * N/Tn * M/Tm) * _fetch_weights_tile_RCMN_ext
+// Fetch OFM: (R/Tr * C/Tc * (N/Tn - 1) * M/Tm) * _fetch_ofm_tile_RCN_ext
+// Addressing (for OFM buffer): (R/Tr * C/Tc * N/Tn * M/Tm) * ADD +                     /* for every tile */
+//                              (R/Tr * C/Tc * N/Tn * M/Tm / preSz) * (1*MPY + 2*ADD)   /* reset after each preservation */
+// Computation: (R/Tr * C/Tc * N/Tn * M/Tm) * _intra_tile_conv
+// Tile output backup: (R/Tr * C/Tc * N/Tn * M/Tm / preSz) * _save_ofm_tile_RCN_ext
+// ================ END _CNN_LayerConv_Tiled_IFM COST MODEL ================
+
+// ============== BEGIN _CNN_Intermittent_LayerConv_Tiled_IFM COST MODEL ==============
+// Number of power cycles: (R/Tr * C/Tc * N/Tn * M/Tm / preSz)
+// Fetch tile idx: SPI_READ(10)
+// Fetch IFM: _fetch_ifm_tile_RCN_ext
+// Fetch weights: preSz * _fetch_weights_tile_RCMN_ext
+// Fetch OFM: preSz * _fetch_ofm_tile_RCN_ext (in most cases, except for ti==0)
+// Addressing: 11*MUL + 8*ADD + 2*SUB + (preSz-1)*ADD
+// Computation: preSz * _intra_tile_conv
+// Tile output backup: _save_ofm_tile_RCN_ext
+// Tile idx backup: SPI_WRITE(10)
+// =============== END _CNN_Intermittent_LayerConv_Tiled_IFM COST MODEL ===============
+
+// =============== BEGIN _CNN_LayerConv_Tiled_WEI COST MODEL ===============
+// Fetch IFM: (M/Tm * N/Tn * R/Tr * C/Tc) * _fetch_ifm_tile_RCN_ext
+// Fetch weights: (M/Tm * N/Tn) * _fetch_weights_tile_RCMN_ext
+// Fetch OFM: (M/Tm * (N/Tn - 1) * R/Tr * C/Tc) * _fetch_ofm_tile_RCN_ext
+// Addressing (for OFM buffer): (M/Tm * N/Tn * R/Tr * C/Tc) * ADD +                     /* for every tile */
+//                              (M/Tm * N/Tn * R/Tr * C/Tc / preSz) * (1*MPY + 2*ADD)   /* reset after each preservation */
+// Computation: (M/Tm * N/Tn * R/Tr * C/Tc) * _intra_tile_conv
+// Tile output backup: (M/Tm * N/Tn * R/Tr * C/Tc / preSz) * _save_ofm_tile_RCN_ext
+// ================ END _CNN_LayerConv_Tiled_WEI COST MODEL ================
+
+// ============== BEGIN _CNN_Intermittent_LayerConv_Tiled_WEI COST MODEL ==============
+// Number of power cycles: (M/Tm * N/Tn * R/Tr * C/Tc / preSz)
+// Fetch tile idx: SPI_READ(10)
+// Fetch IFM: preSz * _fetch_ifm_tile_RCN_ext
+// Fetch weights: _fetch_weights_tile_RCMN_ext
+// Fetch OFM: preSz * _fetch_ofm_tile_RCN_ext (in most cases, except for ti==0)
+// Addressing: 11*MUL + 8*ADD + 2*SUB + (preSz-1)*ADD
+// Computation: preSz * _intra_tile_conv
+// Tile output backup: _save_ofm_tile_RCN_ext
+// Tile idx backup: SPI_WRITE(10)
+// =============== END _CNN_Intermittent_LayerConv_Tiled_WEI COST MODEL ===============
+
+
+cnn/cnn_fc.c
+
+cnn/cnn_matops.c
+
+cnn/cnn_pool.c
+// =============== BEGIN CNN_GlobalAveragePool COST MODEL ===============
+// Fetch IFM: M/Tm * R/Tr * C/Tc * _fetch_ifm_tile_RCN_ext
+// Fetch weights: 0
+// Fetch OFM: 0
+// Addressing: 2*MUL + 1*ADD
+// Computation: M/Tm * R/Tr * C/Tc * (Tr*Tc*Tm * ADD)
+// Tile output backup: M/Tm * R/Tr * C/Tc / preSz * _save_ofm_tile_RCN_ext
+// ================ END CNN_GlobalAveragePool COST MODEL ================
+
+// =============== BEGIN CNN_Intermittent_GlobalAveragePool COST MODEL ===============
+// Number of power cycles: (M/Tm * R/Tr * C/Tc / preSz)
+// Fetch tile idx: SPI_READ(10)
+// Fetch IFM: preSz * _fetch_ifm_tile_RCN_ext
+// Fetch weights: 0
+// Fetch OFM: _fetch_ofm_tile_RCN_ext, except for row==0 && col==0
+// Addressing: 2*MUL + 1*ADD
+// Computation: preSz * (Tr*Tc*Tm * ADD)
+// Tile output backup: _save_ofm_tile_RCN_ext
+// Tile idx backup: SPI_WRITE(10)
+// ================ END CNN_Intermittent_GlobalAveragePool COST MODEL ================
+
+
+cnn/cnn_relu.c
+// ============== BEGIN _intra_tile_relu COST MODEL ==============
+// Number of loop iterations: Tr*Tc
+// Addressing: 2*MPY + 3*ADD
+// Computation: 1*COMPARE
+// =============== END _intra_tile_relu COST MODEL ===============
+
+// =============== BEGIN CNN_ReLU COST MODEL ===============
+// Fetch IFM: N/Tn * R/Tr * C/Tc * _fetch_ifm_tile_RCN_ext
+// Fetch weights: 0
+// Fetch OFM: 0
+// Addressing: 0
+// Computation: N/Tn * R/Tr * C/Tc * _intra_tile_relu
+// Tile output backup: N/Tn * R/Tr * C/Tc / preSz * _save_ofm_tile_RCN_ext
+// ================ END CNN_ReLU COST MODEL ================
+
+
+cnn/cnn_relu_intermittent.c
+// =============== BEGIN CNN_Intermittent_ReLU COST MODEL ===============
+// Number of power cycles: N/Tn * R/Tr * C/Tc / preSz
+// Fetch tile idx: DMA READ 4 Q15
+// Fetch IFM: preSz*_fetch_ifm_tile_RCN_ext
+// Fetch weights: 0 (no weights)
+// Fetch OFM: 0 (no partial sums)
+// Addressing: 0 (same as stable power for one tile)
+// Computation: _intra_tile_relu (same as stable power for one tile)
+// Tile output backup: _save_ofm_tile_RCN_ext (same as stable power for one tile)
+// Tile idx backup: DMA WRITE 4 Q15
+// ================ END CNN_Intermittent_ReLU COST MODEL ================
+
+
+cnn/cnn_utils.c
+// =============== BEGIN FETCH IFM _fetch_ifm_tile_RCN_ext COST MODEL ===============
+// DMA Blk size: Tn
+// N (DMA operations): Th * Tw
+// OVH (addressing): 4*MUL + 8*ADD
+// ================ END _fetch_ifm_tile_RCN_ext COST MODEL ================
+
+// =============== BEGIN FETCH WEIGHTS _fetch_weights_tile_RCMN_ext COST MODEL ===============
+// DMA Blk size: Tn
+// N (DMA operations): Kh * Kw * Tm 
+// OVH (addressing): 9*MUL + 9*ADD
+// ================ END _fetch_weights_tile_RCMN_ext COST MODEL ================
+
+// =============== BEGIN FETCH OFM _fetch_ofm_tile_RCN_ext COST MODEL ===============
+// DMA Blk size: Tm
+// N (DMA operations): Tr * Tc
+// OVH (addressing): 5*MUL + 8*ADD (IFM reuse), 4*MUL + 8*ADD (WEIGHT, OFM reuse)
+// ================ END _fetch_ofm_tile_RCN_ext COST MODEL ================
+
+// =============== BEGIN WRITE OFM _save_ofm_tile_RCN_ext COST MODEL ===============
+// DMA Blk size: Tm if (WEIGHT, OFM reuse), S*Tm if (IFM reuse)
+// N (DMA operations): [Tr*Tc] if (IFM, OFM reuse), [S*Tr*Tc] if (WEIGHT reuse)
+// OVH (addressing): 5*MUL + 8*ADD (OFM reuse), 9*MUL + 8*ADD (WEIGHT reuse), 8*MUL + 8*ADD (IFM reuse)
+// ================ END _save_ofm_tile_RCN_ext COST MODEL ================
+
+
