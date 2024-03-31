@@ -68,7 +68,7 @@ Here is the basic software and hardware needed to build/run the intermittent inf
 3. [Create and activate] (https://conda.io/projects/conda/en/latest/user-guide/getting-started.html) virtual environment
 4. Install dependencies `pip install -r requirements.txt`
 5. Run TiNAS: <br/>
-`python -m NASBase.run_nas --suffix cifar_example_run --settings settings/CIFAR10.json,settings/TiNAS-test.json --stages 1 --imcreq 0 --latreq yyy --ccap 0.005 --no-rlogger`
+`python -m NASBase.run_nas --suffix cifar_example_run --settings settings/CIFAR10.json,settings/TiNAS-test.json --stages 1 --imcreq 0 --latreq 100 --ccap 0.005 --no-rlogger`
 
 ###### Intermittent Inference Library
 1. Download/clone this repository
