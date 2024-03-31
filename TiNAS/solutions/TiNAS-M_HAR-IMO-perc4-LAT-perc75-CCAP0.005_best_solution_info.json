@@ -1,0 +1,5650 @@
+[   
+    {
+        "subnet_choice_per_blk": [
+            [
+                3,
+                5,
+                1,
+                false
+            ],
+            [
+                3,
+                7,
+                2,
+                true
+            ],
+            [
+                6,
+                7,
+                1,
+                true
+            ]
+        ],
+        "subnet_choice_per_blk_ixs": [
+            36,
+            45,
+            91
+        ],
+        "supernet config": [
+            0.6,
+            128
+        ],
+        "subnet_latency_info": {
+            "sn_cpb": [
+                [
+                    3,
+                    5,
+                    1,
+                    false
+                ],
+                [
+                    3,
+                    7,
+                    2,
+                    true
+                ],
+                [
+                    6,
+                    7,
+                    1,
+                    true
+                ]
+            ],
+            "subnet_obj": [
+                {
+                    "name": "CONV_0",
+                    "alias": "stem.conv0",
+                    "lcnt": "0/37",
+                    "type": "CONV",
+                    "objtype": "<class 'torch.nn.modules.conv.Conv1d'>",
+                    "optype": 9,
+                    "stride": 1,
+                    "pad": 1,
+                    "K": {
+                        "N": 10,
+                        "CH": 9,
+                        "H": 3,
+                        "W": 1
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 9,
+                        "H": 128,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 10,
+                        "H": 128,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "BN_1",
+                    "alias": "stem.bn0",
+                    "lcnt": "1/37",
+                    "type": "BN",
+                    "objtype": "<class 'torch.nn.modules.batchnorm.BatchNorm1d'>",
+                    "optype": 4,
+                    "stride": null,
+                    "K": {
+                        "N": null,
+                        "CH": null,
+                        "H": null,
+                        "W": null
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 10,
+                        "H": 128,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 10,
+                        "H": 128,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "CONV_2",
+                    "alias": "choice_blocks.0._layers.0.op.mbconv_conv0_pw",
+                    "lcnt": "2/37",
+                    "type": "CONV",
+                    "objtype": "<class 'torch.nn.modules.conv.Conv1d'>",
+                    "optype": 11,
+                    "stride": 1,
+                    "pad": 0,
+                    "K": {
+                        "N": 30,
+                        "CH": 10,
+                        "H": 1,
+                        "W": 1
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 10,
+                        "H": 128,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 30,
+                        "H": 128,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "BN_3",
+                    "alias": "choice_blocks.0._layers.0.op.mbconv_bn0",
+                    "lcnt": "3/37",
+                    "type": "BN",
+                    "objtype": "<class 'torch.nn.modules.batchnorm.BatchNorm1d'>",
+                    "optype": 4,
+                    "stride": null,
+                    "K": {
+                        "N": null,
+                        "CH": null,
+                        "H": null,
+                        "W": null
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 30,
+                        "H": 128,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 30,
+                        "H": 128,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "RELU_4",
+                    "alias": "choice_blocks.0._layers.0.op.mbconv_relu0",
+                    "lcnt": "4/37",
+                    "type": "RELU",
+                    "objtype": "<class 'torch.nn.modules.activation.ReLU'>",
+                    "optype": 5,
+                    "stride": null,
+                    "K": {
+                        "N": null,
+                        "CH": null,
+                        "H": null,
+                        "W": null
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 30,
+                        "H": 128,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 30,
+                        "H": 128,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "CONV_5",
+                    "alias": "choice_blocks.0._layers.0.op.mbconv_conv1_dw",
+                    "lcnt": "5/37",
+                    "type": "CONV",
+                    "objtype": "<class 'torch.nn.modules.conv.Conv1d'>",
+                    "optype": 12,
+                    "stride": 2,
+                    "pad": 2,
+                    "K": {
+                        "N": 30,
+                        "CH": 1,
+                        "H": 5,
+                        "W": 1
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 30,
+                        "H": 128,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 30,
+                        "H": 64,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "BN_6",
+                    "alias": "choice_blocks.0._layers.0.op.mbconv_bn1",
+                    "lcnt": "6/37",
+                    "type": "BN",
+                    "objtype": "<class 'torch.nn.modules.batchnorm.BatchNorm1d'>",
+                    "optype": 4,
+                    "stride": null,
+                    "K": {
+                        "N": null,
+                        "CH": null,
+                        "H": null,
+                        "W": null
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 30,
+                        "H": 64,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 30,
+                        "H": 64,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "RELU_7",
+                    "alias": "choice_blocks.0._layers.0.op.mbconv_relu1",
+                    "lcnt": "7/37",
+                    "type": "RELU",
+                    "objtype": "<class 'torch.nn.modules.activation.ReLU'>",
+                    "optype": 5,
+                    "stride": null,
+                    "K": {
+                        "N": null,
+                        "CH": null,
+                        "H": null,
+                        "W": null
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 30,
+                        "H": 64,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 30,
+                        "H": 64,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "CONV_8",
+                    "alias": "choice_blocks.0._layers.0.op.mbconv_conv2_pw",
+                    "lcnt": "8/37",
+                    "type": "CONV",
+                    "objtype": "<class 'torch.nn.modules.conv.Conv1d'>",
+                    "optype": 11,
+                    "stride": 1,
+                    "pad": 0,
+                    "K": {
+                        "N": 4,
+                        "CH": 30,
+                        "H": 1,
+                        "W": 1
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 30,
+                        "H": 64,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 4,
+                        "H": 64,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "BN_9",
+                    "alias": "choice_blocks.0._layers.0.op.mbconv_bn2",
+                    "lcnt": "9/37",
+                    "type": "BN",
+                    "objtype": "<class 'torch.nn.modules.batchnorm.BatchNorm1d'>",
+                    "optype": 4,
+                    "stride": null,
+                    "K": {
+                        "N": null,
+                        "CH": null,
+                        "H": null,
+                        "W": null
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 4,
+                        "H": 64,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 4,
+                        "H": 64,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "CONV_10",
+                    "alias": "choice_blocks.1._layers.0.op.mbconv_conv0_pw",
+                    "lcnt": "10/37",
+                    "type": "CONV",
+                    "objtype": "<class 'torch.nn.modules.conv.Conv1d'>",
+                    "optype": 11,
+                    "stride": 1,
+                    "pad": 0,
+                    "K": {
+                        "N": 12,
+                        "CH": 4,
+                        "H": 1,
+                        "W": 1
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 4,
+                        "H": 64,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 12,
+                        "H": 64,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "BN_11",
+                    "alias": "choice_blocks.1._layers.0.op.mbconv_bn0",
+                    "lcnt": "11/37",
+                    "type": "BN",
+                    "objtype": "<class 'torch.nn.modules.batchnorm.BatchNorm1d'>",
+                    "optype": 4,
+                    "stride": null,
+                    "K": {
+                        "N": null,
+                        "CH": null,
+                        "H": null,
+                        "W": null
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 12,
+                        "H": 64,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 12,
+                        "H": 64,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "RELU_12",
+                    "alias": "choice_blocks.1._layers.0.op.mbconv_relu0",
+                    "lcnt": "12/37",
+                    "type": "RELU",
+                    "objtype": "<class 'torch.nn.modules.activation.ReLU'>",
+                    "optype": 5,
+                    "stride": null,
+                    "K": {
+                        "N": null,
+                        "CH": null,
+                        "H": null,
+                        "W": null
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 12,
+                        "H": 64,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 12,
+                        "H": 64,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "CONV_13",
+                    "alias": "choice_blocks.1._layers.0.op.mbconv_conv1_dw",
+                    "lcnt": "13/37",
+                    "type": "CONV",
+                    "objtype": "<class 'torch.nn.modules.conv.Conv1d'>",
+                    "optype": 12,
+                    "stride": 2,
+                    "pad": 3,
+                    "K": {
+                        "N": 12,
+                        "CH": 1,
+                        "H": 7,
+                        "W": 1
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 12,
+                        "H": 64,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 12,
+                        "H": 32,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "BN_14",
+                    "alias": "choice_blocks.1._layers.0.op.mbconv_bn1",
+                    "lcnt": "14/37",
+                    "type": "BN",
+                    "objtype": "<class 'torch.nn.modules.batchnorm.BatchNorm1d'>",
+                    "optype": 4,
+                    "stride": null,
+                    "K": {
+                        "N": null,
+                        "CH": null,
+                        "H": null,
+                        "W": null
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 12,
+                        "H": 32,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 12,
+                        "H": 32,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "RELU_15",
+                    "alias": "choice_blocks.1._layers.0.op.mbconv_relu1",
+                    "lcnt": "15/37",
+                    "type": "RELU",
+                    "objtype": "<class 'torch.nn.modules.activation.ReLU'>",
+                    "optype": 5,
+                    "stride": null,
+                    "K": {
+                        "N": null,
+                        "CH": null,
+                        "H": null,
+                        "W": null
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 12,
+                        "H": 32,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 12,
+                        "H": 32,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "CONV_16",
+                    "alias": "choice_blocks.1._layers.0.op.mbconv_conv2_pw",
+                    "lcnt": "16/37",
+                    "type": "CONV",
+                    "objtype": "<class 'torch.nn.modules.conv.Conv1d'>",
+                    "optype": 11,
+                    "stride": 1,
+                    "pad": 0,
+                    "K": {
+                        "N": 8,
+                        "CH": 12,
+                        "H": 1,
+                        "W": 1
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 12,
+                        "H": 32,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 8,
+                        "H": 32,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "BN_17",
+                    "alias": "choice_blocks.1._layers.0.op.mbconv_bn2",
+                    "lcnt": "17/37",
+                    "type": "BN",
+                    "objtype": "<class 'torch.nn.modules.batchnorm.BatchNorm1d'>",
+                    "optype": 4,
+                    "stride": null,
+                    "K": {
+                        "N": null,
+                        "CH": null,
+                        "H": null,
+                        "W": null
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 8,
+                        "H": 32,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 8,
+                        "H": 32,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "CONV_18",
+                    "alias": "choice_blocks.1._layers.1.op.mbconv_conv0_pw",
+                    "lcnt": "18/37",
+                    "type": "CONV",
+                    "objtype": "<class 'torch.nn.modules.conv.Conv1d'>",
+                    "optype": 11,
+                    "stride": 1,
+                    "pad": 0,
+                    "K": {
+                        "N": 24,
+                        "CH": 8,
+                        "H": 1,
+                        "W": 1
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 8,
+                        "H": 32,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 24,
+                        "H": 32,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "BN_19",
+                    "alias": "choice_blocks.1._layers.1.op.mbconv_bn0",
+                    "lcnt": "19/37",
+                    "type": "BN",
+                    "objtype": "<class 'torch.nn.modules.batchnorm.BatchNorm1d'>",
+                    "optype": 4,
+                    "stride": null,
+                    "K": {
+                        "N": null,
+                        "CH": null,
+                        "H": null,
+                        "W": null
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 24,
+                        "H": 32,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 24,
+                        "H": 32,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "RELU_20",
+                    "alias": "choice_blocks.1._layers.1.op.mbconv_relu0",
+                    "lcnt": "20/37",
+                    "type": "RELU",
+                    "objtype": "<class 'torch.nn.modules.activation.ReLU'>",
+                    "optype": 5,
+                    "stride": null,
+                    "K": {
+                        "N": null,
+                        "CH": null,
+                        "H": null,
+                        "W": null
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 24,
+                        "H": 32,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 24,
+                        "H": 32,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "CONV_21",
+                    "alias": "choice_blocks.1._layers.1.op.mbconv_conv1_dw",
+                    "lcnt": "21/37",
+                    "type": "CONV",
+                    "objtype": "<class 'torch.nn.modules.conv.Conv1d'>",
+                    "optype": 12,
+                    "stride": 1,
+                    "pad": 3,
+                    "K": {
+                        "N": 24,
+                        "CH": 1,
+                        "H": 7,
+                        "W": 1
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 24,
+                        "H": 32,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 24,
+                        "H": 32,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "BN_22",
+                    "alias": "choice_blocks.1._layers.1.op.mbconv_bn1",
+                    "lcnt": "22/37",
+                    "type": "BN",
+                    "objtype": "<class 'torch.nn.modules.batchnorm.BatchNorm1d'>",
+                    "optype": 4,
+                    "stride": null,
+                    "K": {
+                        "N": null,
+                        "CH": null,
+                        "H": null,
+                        "W": null
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 24,
+                        "H": 32,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 24,
+                        "H": 32,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "RELU_23",
+                    "alias": "choice_blocks.1._layers.1.op.mbconv_relu1",
+                    "lcnt": "23/37",
+                    "type": "RELU",
+                    "objtype": "<class 'torch.nn.modules.activation.ReLU'>",
+                    "optype": 5,
+                    "stride": null,
+                    "K": {
+                        "N": null,
+                        "CH": null,
+                        "H": null,
+                        "W": null
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 24,
+                        "H": 32,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 24,
+                        "H": 32,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "CONV_24",
+                    "alias": "choice_blocks.1._layers.1.op.mbconv_conv2_pw",
+                    "lcnt": "24/37",
+                    "type": "CONV",
+                    "objtype": "<class 'torch.nn.modules.conv.Conv1d'>",
+                    "optype": 11,
+                    "stride": 1,
+                    "pad": 0,
+                    "K": {
+                        "N": 8,
+                        "CH": 24,
+                        "H": 1,
+                        "W": 1
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 24,
+                        "H": 32,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 8,
+                        "H": 32,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "BN_25",
+                    "alias": "choice_blocks.1._layers.1.op.mbconv_bn2",
+                    "lcnt": "25/37",
+                    "type": "BN",
+                    "objtype": "<class 'torch.nn.modules.batchnorm.BatchNorm1d'>",
+                    "optype": 4,
+                    "stride": null,
+                    "K": {
+                        "N": null,
+                        "CH": null,
+                        "H": null,
+                        "W": null
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 8,
+                        "H": 32,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 8,
+                        "H": 32,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "ADD_26",
+                    "alias": "choice_blocks.1._layers.1.shortcut.skip_aggr",
+                    "lcnt": "26/37",
+                    "type": "ADD",
+                    "objtype": "tensor.add",
+                    "optype": 8,
+                    "stride": null,
+                    "K": {
+                        "N": null,
+                        "CH": null,
+                        "H": null,
+                        "W": null
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 8,
+                        "H": 32,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 8,
+                        "H": 32,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "CONV_27",
+                    "alias": "choice_blocks.2._layers.0.op.mbconv_conv0_pw",
+                    "lcnt": "27/37",
+                    "type": "CONV",
+                    "objtype": "<class 'torch.nn.modules.conv.Conv1d'>",
+                    "optype": 11,
+                    "stride": 1,
+                    "pad": 0,
+                    "K": {
+                        "N": 48,
+                        "CH": 8,
+                        "H": 1,
+                        "W": 1
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 8,
+                        "H": 32,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 48,
+                        "H": 32,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "BN_28",
+                    "alias": "choice_blocks.2._layers.0.op.mbconv_bn0",
+                    "lcnt": "28/37",
+                    "type": "BN",
+                    "objtype": "<class 'torch.nn.modules.batchnorm.BatchNorm1d'>",
+                    "optype": 4,
+                    "stride": null,
+                    "K": {
+                        "N": null,
+                        "CH": null,
+                        "H": null,
+                        "W": null
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 48,
+                        "H": 32,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 48,
+                        "H": 32,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "RELU_29",
+                    "alias": "choice_blocks.2._layers.0.op.mbconv_relu0",
+                    "lcnt": "29/37",
+                    "type": "RELU",
+                    "objtype": "<class 'torch.nn.modules.activation.ReLU'>",
+                    "optype": 5,
+                    "stride": null,
+                    "K": {
+                        "N": null,
+                        "CH": null,
+                        "H": null,
+                        "W": null
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 48,
+                        "H": 32,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 48,
+                        "H": 32,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "CONV_30",
+                    "alias": "choice_blocks.2._layers.0.op.mbconv_conv1_dw",
+                    "lcnt": "30/37",
+                    "type": "CONV",
+                    "objtype": "<class 'torch.nn.modules.conv.Conv1d'>",
+                    "optype": 12,
+                    "stride": 2,
+                    "pad": 3,
+                    "K": {
+                        "N": 48,
+                        "CH": 1,
+                        "H": 7,
+                        "W": 1
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 48,
+                        "H": 32,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 48,
+                        "H": 16,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "BN_31",
+                    "alias": "choice_blocks.2._layers.0.op.mbconv_bn1",
+                    "lcnt": "31/37",
+                    "type": "BN",
+                    "objtype": "<class 'torch.nn.modules.batchnorm.BatchNorm1d'>",
+                    "optype": 4,
+                    "stride": null,
+                    "K": {
+                        "N": null,
+                        "CH": null,
+                        "H": null,
+                        "W": null
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 48,
+                        "H": 16,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 48,
+                        "H": 16,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "RELU_32",
+                    "alias": "choice_blocks.2._layers.0.op.mbconv_relu1",
+                    "lcnt": "32/37",
+                    "type": "RELU",
+                    "objtype": "<class 'torch.nn.modules.activation.ReLU'>",
+                    "optype": 5,
+                    "stride": null,
+                    "K": {
+                        "N": null,
+                        "CH": null,
+                        "H": null,
+                        "W": null
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 48,
+                        "H": 16,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 48,
+                        "H": 16,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "CONV_33",
+                    "alias": "choice_blocks.2._layers.0.op.mbconv_conv2_pw",
+                    "lcnt": "33/37",
+                    "type": "CONV",
+                    "objtype": "<class 'torch.nn.modules.conv.Conv1d'>",
+                    "optype": 11,
+                    "stride": 1,
+                    "pad": 0,
+                    "K": {
+                        "N": 10,
+                        "CH": 48,
+                        "H": 1,
+                        "W": 1
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 48,
+                        "H": 16,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 10,
+                        "H": 16,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "BN_34",
+                    "alias": "choice_blocks.2._layers.0.op.mbconv_bn2",
+                    "lcnt": "34/37",
+                    "type": "BN",
+                    "objtype": "<class 'torch.nn.modules.batchnorm.BatchNorm1d'>",
+                    "optype": 4,
+                    "stride": null,
+                    "K": {
+                        "N": null,
+                        "CH": null,
+                        "H": null,
+                        "W": null
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 10,
+                        "H": 16,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 10,
+                        "H": 16,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "GAVGPOOL_35",
+                    "alias": "global_pooling",
+                    "lcnt": "35/37",
+                    "type": "GAVGPOOL",
+                    "objtype": "<class 'torch.nn.modules.pooling.AdaptiveAvgPool1d'>",
+                    "optype": 7,
+                    "stride": null,
+                    "K": {
+                        "N": null,
+                        "CH": null,
+                        "H": null,
+                        "W": null
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 10,
+                        "H": 16,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 10,
+                        "H": 1,
+                        "W": 1
+                    }
+                },
+                {
+                    "name": "FC_END",
+                    "alias": "classifier",
+                    "lcnt": "36/37",
+                    "type": "FC",
+                    "objtype": "<class 'torch.nn.modules.linear.Linear'>",
+                    "optype": 6,
+                    "stride": 1,
+                    "K": {
+                        "N": 6,
+                        "CH": 10,
+                        "H": 1,
+                        "W": 1
+                    },
+                    "IFM": {
+                        "N": 1,
+                        "CH": 10,
+                        "H": 1,
+                        "W": 1
+                    },
+                    "OFM": {
+                        "N": 1,
+                        "CH": 6,
+                        "H": 1,
+                        "W": 1
+                    }
+                }
+            ],
+            "error_codes": [
+                false,
+                null,
+                null
+            ],
+            "perf_e2e_intpow_lat": 27.91360842178348,
+            "perf_exec_design_intpow": [
+                {
+                    "layer": "CONV_0",
+                    "alias": "stem.conv0",
+                    "params": {
+                        "Tr": 64,
+                        "Tc": 1,
+                        "Tm": 10,
+                        "Tn": 1,
+                        "reuse_sch": "reuse_O",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            3,
+                            1,
+                            66,
+                            1,
+                            64,
+                            1,
+                            10,
+                            1
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            6.810027784955317e-05,
+                            0.010448375
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            0.0008104311229675886,
+                            0.14215406249999998
+                        ],
+                        "bd": [
+                            3.584566347085235e-05,
+                            0.005528
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.0009928883779578106,
+                        0.000958498122548329
+                    ],
+                    "Eu": 6.794468201806144,
+                    "Le2e": 11.838155951046634,
+                    "npc": 18.0,
+                    "L_rc_tot": 8.010898701046633,
+                    "vm": 1472
+                },
+                {
+                    "layer": "BN_1",
+                    "alias": "stem.bn0",
+                    "params": {
+                        "Tr": 64,
+                        "Tc": 1,
+                        "Tm": 10,
+                        "Tn": 1,
+                        "reuse_sch": "reuse_W",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            64,
+                            1,
+                            64,
+                            1,
+                            10,
+                            1
+                        ],
+                        "inter_lo": "reuse_W"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            3.693221416744605e-05,
+                            0.00577975
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            6.412304410256421e-05,
+                            0.01008
+                        ],
+                        "bd": [
+                            4.069150716316004e-05,
+                            0.006248
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.00022025807910298683,
+                        0.00022025807910298683
+                    ],
+                    "Eu": 1.5072555464233028,
+                    "Le2e": 0.3543315094812425,
+                    "npc": 2.0,
+                    "L_rc_tot": 0.19992963448124249,
+                    "vm": 1360
+                },
+                {
+                    "layer": "CONV_2",
+                    "alias": "choice_blocks.0._layers.0.op.mbconv_conv0_pw",
+                    "params": {
+                        "Tr": 16,
+                        "Tc": 1,
+                        "Tm": 30,
+                        "Tn": 10,
+                        "reuse_sch": "reuse_O",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            1,
+                            1,
+                            16,
+                            1,
+                            16,
+                            1,
+                            30,
+                            10
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            4.3970788439729155e-05,
+                            0.006940125
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            0.0002048532082518909,
+                            0.035954062499999995
+                        ],
+                        "bd": [
+                            1.6598659880816103e-05,
+                            0.0026620000000000003
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.00032762543633962693,
+                        0.00032762543633962693
+                    ],
+                    "Eu": 2.2419847575323786,
+                    "Le2e": 1.9722964032696595,
+                    "npc": 8.0,
+                    "L_rc_tot": 1.1881094032696595,
+                    "vm": 1880
+                },
+                {
+                    "layer": "BN_3",
+                    "alias": "choice_blocks.0._layers.0.op.mbconv_bn0",
+                    "params": {
+                        "Tr": 26,
+                        "Tc": 1,
+                        "Tm": 30,
+                        "Tn": 1,
+                        "reuse_sch": "reuse_W",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            26,
+                            1,
+                            26,
+                            1,
+                            30,
+                            1
+                        ],
+                        "inter_lo": "reuse_W"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            3.097106886229508e-05,
+                            0.0049830000000000004
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            7.814996000000012e-05,
+                            0.012284999999999999
+                        ],
+                        "bd": [
+                            2.8941446306326168e-05,
+                            0.004618250000000001
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.00021657378883843792,
+                        0.00021657378883843792
+                    ],
+                    "Eu": 1.4820434545059924,
+                    "Le2e": 0.8763811208083763,
+                    "npc": 5.0,
+                    "L_rc_tot": 0.4914839333083762,
+                    "vm": 1800
+                },
+                {
+                    "layer": "RELU_4",
+                    "alias": "choice_blocks.0._layers.0.op.mbconv_relu0",
+                    "params": {
+                        "Tr": 32,
+                        "Tc": 1,
+                        "Tm": 30,
+                        "Tn": 1,
+                        "reuse_sch": "reuse_O",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            32,
+                            1,
+                            32,
+                            1,
+                            30,
+                            1
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            3.261706780525151e-05,
+                            0.005252
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            4.6823532307692346e-05,
+                            0.0077399999999999995
+                        ],
+                        "bd": [
+                            3.3197319761632206e-05,
+                            0.005324000000000001
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.0001911492335443926,
+                        0.0001911492335443926
+                    ],
+                    "Eu": 1.3080598161379409,
+                    "Le2e": 0.6407657706434091,
+                    "npc": 4.0,
+                    "L_rc_tot": 0.3471290206434091,
+                    "vm": 1920
+                },
+                {
+                    "layer": "CONV_5",
+                    "alias": "choice_blocks.0._layers.0.op.mbconv_conv1_dw",
+                    "params": {
+                        "Tr": 8,
+                        "Tc": 1,
+                        "Tm": 30,
+                        "Tn": 1,
+                        "reuse_sch": "reuse_O",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            5,
+                            1,
+                            19,
+                            1,
+                            8,
+                            1,
+                            30,
+                            1
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            8.215918253351827e-05,
+                            0.012559
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            0.00029601846153846185,
+                            0.047025000000000004
+                        ],
+                        "bd": [
+                            8.299329940408051e-06,
+                            0.0013310000000000002
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.0004649882876822047,
+                        0.0004649882876822047
+                    ],
+                    "Eu": 3.1819771537332606,
+                    "Le2e": 2.6117076542561364,
+                    "npc": 8.0,
+                    "L_rc_tot": 1.6836421542561364,
+                    "vm": 1920
+                },
+                {
+                    "layer": "BN_6",
+                    "alias": "choice_blocks.0._layers.0.op.mbconv_bn1",
+                    "params": {
+                        "Tr": 22,
+                        "Tc": 1,
+                        "Tm": 30,
+                        "Tn": 1,
+                        "reuse_sch": "reuse_W",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            22,
+                            1,
+                            22,
+                            1,
+                            30,
+                            1
+                        ],
+                        "inter_lo": "reuse_W"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            2.6893935386638647e-05,
+                            0.0043265
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            6.612688923076934e-05,
+                            0.010395
+                        ],
+                        "bd": [
+                            2.448891610535291e-05,
+                            0.003907750000000001
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.0001960210543925774,
+                        0.0001960210543925774
+                    ],
+                    "Eu": 1.3413983389495097,
+                    "Le2e": 0.4881348140672116,
+                    "npc": 3.0,
+                    "L_rc_tot": 0.26696750156721155,
+                    "vm": 1560
+                },
+                {
+                    "layer": "RELU_7",
+                    "alias": "choice_blocks.0._layers.0.op.mbconv_relu1",
+                    "params": {
+                        "Tr": 32,
+                        "Tc": 1,
+                        "Tm": 30,
+                        "Tn": 1,
+                        "reuse_sch": "reuse_O",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            32,
+                            1,
+                            32,
+                            1,
+                            30,
+                            1
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            3.261706780525151e-05,
+                            0.005252
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            4.6823532307692346e-05,
+                            0.0077399999999999995
+                        ],
+                        "bd": [
+                            3.3197319761632206e-05,
+                            0.005324000000000001
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.0001911492335443926,
+                        0.0001911492335443926
+                    ],
+                    "Eu": 1.3080598161379409,
+                    "Le2e": 0.32038288532170456,
+                    "npc": 2.0,
+                    "L_rc_tot": 0.17356451032170456,
+                    "vm": 1920
+                },
+                {
+                    "layer": "CONV_8",
+                    "alias": "choice_blocks.0._layers.0.op.mbconv_conv2_pw",
+                    "params": {
+                        "Tr": 22,
+                        "Tc": 1,
+                        "Tm": 4,
+                        "Tn": 30,
+                        "reuse_sch": "reuse_O",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            1,
+                            1,
+                            22,
+                            1,
+                            22,
+                            1,
+                            4,
+                            30
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            3.5534810537917636e-05,
+                            0.00564925
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            3.851959962090678e-05,
+                            0.0067680625
+                        ],
+                        "bd": [
+                            9.171583662700503e-06,
+                            0.00137225
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.00015309643234006246,
+                        0.00015309643234006246
+                    ],
+                    "Eu": 1.0476593990192928,
+                    "Le2e": 0.4112884435365713,
+                    "npc": 3.0,
+                    "L_rc_tot": 0.2086084435365712,
+                    "vm": 1736
+                },
+                {
+                    "layer": "BN_9",
+                    "alias": "choice_blocks.0._layers.0.op.mbconv_bn2",
+                    "params": {
+                        "Tr": 64,
+                        "Tc": 1,
+                        "Tm": 4,
+                        "Tn": 1,
+                        "reuse_sch": "reuse_W",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            64,
+                            1,
+                            64,
+                            1,
+                            4,
+                            1
+                        ],
+                        "inter_lo": "reuse_W"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            2.7100727353370487e-05,
+                            0.0041477499999999995
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            2.5649217641025683e-05,
+                            0.004032
+                        ],
+                        "bd": [
+                            3.1526814347436424e-05,
+                            0.004712
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.0001627880730116491,
+                        0.0001627880730116491
+                    ],
+                    "Eu": 1.1139805946625203,
+                    "Le2e": 0.1419148929631752,
+                    "npc": 1.0,
+                    "L_rc_tot": 0.0739299554631752,
+                    "vm": 544
+                },
+                {
+                    "layer": "CONV_10",
+                    "alias": "choice_blocks.1._layers.0.op.mbconv_conv0_pw",
+                    "params": {
+                        "Tr": 32,
+                        "Tc": 1,
+                        "Tm": 12,
+                        "Tn": 4,
+                        "reuse_sch": "reuse_O",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            1,
+                            1,
+                            32,
+                            1,
+                            32,
+                            1,
+                            12,
+                            4
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            3.719677540196525e-05,
+                            0.00577125
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            0.00016274179249361863,
+                            0.028550062499999997
+                        ],
+                        "bd": [
+                            1.9450280538046778e-05,
+                            0.00302
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.0002791628403886553,
+                        0.0002791628403886553
+                    ],
+                    "Eu": 1.9103487202135419,
+                    "Le2e": 0.4322022488430883,
+                    "npc": 2.0,
+                    "L_rc_tot": 0.2532292488430883,
+                    "vm": 1120
+                },
+                {
+                    "layer": "BN_11",
+                    "alias": "choice_blocks.1._layers.0.op.mbconv_bn0",
+                    "params": {
+                        "Tr": 64,
+                        "Tc": 1,
+                        "Tm": 12,
+                        "Tn": 1,
+                        "reuse_sch": "reuse_W",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            64,
+                            1,
+                            64,
+                            1,
+                            12,
+                            1
+                        ],
+                        "inter_lo": "reuse_W"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            4.0209376438804574e-05,
+                            0.00632375
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            7.694765292307705e-05,
+                            0.012095999999999999
+                        ],
+                        "bd": [
+                            4.374640476840125e-05,
+                            0.00676
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.0002394147478000994,
+                        0.0002394147478000994
+                    ],
+                    "Eu": 1.6383471970102303,
+                    "Le2e": 0.18890853613318181,
+                    "npc": 1.0,
+                    "L_rc_tot": 0.10863559863318181,
+                    "vm": 1632
+                },
+                {
+                    "layer": "RELU_12",
+                    "alias": "choice_blocks.1._layers.0.op.mbconv_relu0",
+                    "params": {
+                        "Tr": 64,
+                        "Tc": 1,
+                        "Tm": 12,
+                        "Tn": 1,
+                        "reuse_sch": "reuse_O",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            64,
+                            1,
+                            64,
+                            1,
+                            12,
+                            1
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            3.747464342958379e-05,
+                            0.005896
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            3.745882584615387e-05,
+                            0.006192
+                        ],
+                        "bd": [
+                            3.8900561076093555e-05,
+                            0.00604
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.00019234534402164777,
+                        0.00019234534402164777
+                    ],
+                    "Eu": 1.316244960393807,
+                    "Le2e": 0.16054529760662362,
+                    "npc": 1.0,
+                    "L_rc_tot": 0.08732411010662361,
+                    "vm": 1536
+                },
+                {
+                    "layer": "CONV_13",
+                    "alias": "choice_blocks.1._layers.0.op.mbconv_conv1_dw",
+                    "params": {
+                        "Tr": 32,
+                        "Tc": 1,
+                        "Tm": 6,
+                        "Tn": 1,
+                        "reuse_sch": "reuse_O",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            7,
+                            1,
+                            69,
+                            1,
+                            32,
+                            1,
+                            6,
+                            1
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            4.800826603176423e-05,
+                            0.007344
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            0.0003315406769230773,
+                            0.052668000000000006
+                        ],
+                        "bd": [
+                            1.486793413018497e-05,
+                            0.002252
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.0004729281907548431,
+                        0.0004729281907548431
+                    ],
+                    "Eu": 3.2363109742815728,
+                    "Le2e": 0.6627740202668522,
+                    "npc": 2.0,
+                    "L_rc_tot": 0.42805964526685214,
+                    "vm": 1296
+                },
+                {
+                    "layer": "BN_14",
+                    "alias": "choice_blocks.1._layers.0.op.mbconv_bn1",
+                    "params": {
+                        "Tr": 32,
+                        "Tc": 1,
+                        "Tm": 12,
+                        "Tn": 1,
+                        "reuse_sch": "reuse_W",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            32,
+                            1,
+                            32,
+                            1,
+                            12,
+                            1
+                        ],
+                        "inter_lo": "reuse_W"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            2.1472054724012675e-05,
+                            0.0033757500000000003
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            3.8473826461538524e-05,
+                            0.0060479999999999996
+                        ],
+                        "bd": [
+                            2.1873202384200624e-05,
+                            0.00338
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.00016033039723956834,
+                        0.00016033039723956834
+                    ],
+                    "Eu": 1.0971623900642369,
+                    "Le2e": 0.14071277089434597,
+                    "npc": 1.0,
+                    "L_rc_tot": 0.07281583339434597,
+                    "vm": 864
+                },
+                {
+                    "layer": "RELU_15",
+                    "alias": "choice_blocks.1._layers.0.op.mbconv_relu1",
+                    "params": {
+                        "Tr": 32,
+                        "Tc": 1,
+                        "Tm": 12,
+                        "Tn": 1,
+                        "reuse_sch": "reuse_O",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            32,
+                            1,
+                            32,
+                            1,
+                            12,
+                            1
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            1.8737321714791895e-05,
+                            0.002948
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            1.8729412923076936e-05,
+                            0.003096
+                        ],
+                        "bd": [
+                            1.9450280538046778e-05,
+                            0.00302
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.00013542832884573213,
+                        0.00013542832884573213
+                    ],
+                    "Eu": 0.9267541995593508,
+                    "Le2e": 0.12568083340068265,
+                    "npc": 1.0,
+                    "L_rc_tot": 0.06152364590068263,
+                    "vm": 768
+                },
+                {
+                    "layer": "CONV_16",
+                    "alias": "choice_blocks.1._layers.0.op.mbconv_conv2_pw",
+                    "params": {
+                        "Tr": 32,
+                        "Tc": 1,
+                        "Tm": 8,
+                        "Tn": 12,
+                        "reuse_sch": "reuse_O",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            1,
+                            1,
+                            32,
+                            1,
+                            32,
+                            1,
+                            8,
+                            12
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            3.985972142792322e-05,
+                            0.0062395
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            0.00010955692406601057,
+                            0.0192300625
+                        ],
+                        "bd": [
+                            1.639538293280557e-05,
+                            0.002508
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.00022867040840186614,
+                        0.00022867040840186614
+                    ],
+                    "Eu": 1.5648222429354726,
+                    "Le2e": 0.18440765677474608,
+                    "npc": 1.0,
+                    "L_rc_tot": 0.10377290677474607,
+                    "vm": 1472
+                },
+                {
+                    "layer": "BN_17",
+                    "alias": "choice_blocks.1._layers.0.op.mbconv_bn2",
+                    "params": {
+                        "Tr": 32,
+                        "Tc": 1,
+                        "Tm": 8,
+                        "Tn": 1,
+                        "reuse_sch": "reuse_W",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            32,
+                            1,
+                            32,
+                            1,
+                            8,
+                            1
+                        ],
+                        "inter_lo": "reuse_W"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            1.800211820139777e-05,
+                            0.0027997499999999997
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            2.5649217641025683e-05,
+                            0.004032
+                        ],
+                        "bd": [
+                            1.8818304778959417e-05,
+                            0.002868
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.00014098095429119942,
+                        0.00014098095429119942
+                    ],
+                    "Eu": 0.9647515594472417,
+                    "Le2e": 0.12883504977673088,
+                    "npc": 1.0,
+                    "L_rc_tot": 0.06404211227673089,
+                    "vm": 576
+                },
+                {
+                    "layer": "CONV_18",
+                    "alias": "choice_blocks.1._layers.1.op.mbconv_conv0_pw",
+                    "params": {
+                        "Tr": 16,
+                        "Tc": 1,
+                        "Tm": 24,
+                        "Tn": 8,
+                        "reuse_sch": "reuse_O",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            1,
+                            1,
+                            16,
+                            1,
+                            16,
+                            1,
+                            24,
+                            8
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            3.5916816775142115e-05,
+                            0.0056425
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            0.0001635149279501634,
+                            0.028694062499999996
+                        ],
+                        "bd": [
+                            1.4307486676885197e-05,
+                            0.002278
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.00027825530218445805,
+                        0.00027825530218445805
+                    ],
+                    "Eu": 1.904138314686361,
+                    "Le2e": 0.4313401049404321,
+                    "npc": 2.0,
+                    "L_rc_tot": 0.2524086049404321,
+                    "vm": 1408
+                },
+                {
+                    "layer": "BN_19",
+                    "alias": "choice_blocks.1._layers.1.op.mbconv_bn0",
+                    "params": {
+                        "Tr": 32,
+                        "Tc": 1,
+                        "Tm": 24,
+                        "Tn": 1,
+                        "reuse_sch": "reuse_W",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            32,
+                            1,
+                            32,
+                            1,
+                            24,
+                            1
+                        ],
+                        "inter_lo": "reuse_W"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            3.188186429185739e-05,
+                            0.00510375
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            7.694765292307705e-05,
+                            0.012095999999999999
+                        ],
+                        "bd": [
+                            3.103789519992424e-05,
+                            0.004916
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.0002183787260846752,
+                        0.0002183787260846752
+                    ],
+                    "Eu": 1.494394881915223,
+                    "Le2e": 0.1763229112351589,
+                    "npc": 1.0,
+                    "L_rc_tot": 0.09911397373515889,
+                    "vm": 1728
+                },
+                {
+                    "layer": "RELU_20",
+                    "alias": "choice_blocks.1._layers.1.op.mbconv_relu0",
+                    "params": {
+                        "Tr": 32,
+                        "Tc": 1,
+                        "Tm": 24,
+                        "Tn": 1,
+                        "reuse_sch": "reuse_O",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            32,
+                            1,
+                            32,
+                            1,
+                            24,
+                            1
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            2.7990485775098306e-05,
+                            0.004484
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            3.745882584615387e-05,
+                            0.006192
+                        ],
+                        "bd": [
+                            2.8614973353770394e-05,
+                            0.004556
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.0001725755986448391,
+                        0.0001725755986448391
+                    ],
+                    "Eu": 1.1809579439450775,
+                    "Le2e": 0.14869144341244697,
+                    "npc": 1.0,
+                    "L_rc_tot": 0.07836625591244696,
+                    "vm": 1536
+                },
+                {
+                    "layer": "CONV_21",
+                    "alias": "choice_blocks.1._layers.1.op.mbconv_conv1_dw",
+                    "params": {
+                        "Tr": 32,
+                        "Tc": 1,
+                        "Tm": 12,
+                        "Tn": 1,
+                        "reuse_sch": "reuse_O",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            7,
+                            1,
+                            38,
+                            1,
+                            32,
+                            1,
+                            12,
+                            1
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            5.7414536709839484e-05,
+                            0.0087875
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            0.0006630813538461546,
+                            0.10533600000000001
+                        ],
+                        "bd": [
+                            1.9450280538046778e-05,
+                            0.00302
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.0008184574847638573,
+                        0.0008184574847638573
+                    ],
+                    "Eu": 5.600814228681163,
+                    "Le2e": 1.0824288240964768,
+                    "npc": 2.0,
+                    "L_rc_tot": 0.7379554490964768,
+                    "vm": 1848
+                },
+                {
+                    "layer": "BN_22",
+                    "alias": "choice_blocks.1._layers.1.op.mbconv_bn1",
+                    "params": {
+                        "Tr": 32,
+                        "Tc": 1,
+                        "Tm": 24,
+                        "Tn": 1,
+                        "reuse_sch": "reuse_W",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            32,
+                            1,
+                            32,
+                            1,
+                            24,
+                            1
+                        ],
+                        "inter_lo": "reuse_W"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            3.188186429185739e-05,
+                            0.00510375
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            7.694765292307705e-05,
+                            0.012095999999999999
+                        ],
+                        "bd": [
+                            3.103789519992424e-05,
+                            0.004916
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.0002183787260846752,
+                        0.0002183787260846752
+                    ],
+                    "Eu": 1.494394881915223,
+                    "Le2e": 0.1763229112351589,
+                    "npc": 1.0,
+                    "L_rc_tot": 0.09911397373515889,
+                    "vm": 1728
+                },
+                {
+                    "layer": "RELU_23",
+                    "alias": "choice_blocks.1._layers.1.op.mbconv_relu1",
+                    "params": {
+                        "Tr": 32,
+                        "Tc": 1,
+                        "Tm": 24,
+                        "Tn": 1,
+                        "reuse_sch": "reuse_O",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            32,
+                            1,
+                            32,
+                            1,
+                            24,
+                            1
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            2.7990485775098306e-05,
+                            0.004484
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            3.745882584615387e-05,
+                            0.006192
+                        ],
+                        "bd": [
+                            2.8614973353770394e-05,
+                            0.004556
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.0001725755986448391,
+                        0.0001725755986448391
+                    ],
+                    "Eu": 1.1809579439450775,
+                    "Le2e": 0.14869144341244697,
+                    "npc": 1.0,
+                    "L_rc_tot": 0.07836625591244696,
+                    "vm": 1536
+                },
+                {
+                    "layer": "CONV_24",
+                    "alias": "choice_blocks.1._layers.1.op.mbconv_conv2_pw",
+                    "params": {
+                        "Tr": 16,
+                        "Tc": 1,
+                        "Tm": 8,
+                        "Tn": 24,
+                        "reuse_sch": "reuse_O",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            1,
+                            1,
+                            16,
+                            1,
+                            16,
+                            1,
+                            8,
+                            24
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            2.9604466768412194e-05,
+                            0.0046995000000000006
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            5.559892018185775e-05,
+                            0.0097660625
+                        ],
+                        "bd": [
+                            8.197691466402785e-06,
+                            0.001254
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.00016408592523914437,
+                        0.00016408592523914437
+                    ],
+                    "Eu": 1.122861971347075,
+                    "Le2e": 0.28822605464614726,
+                    "npc": 2.0,
+                    "L_rc_tot": 0.14903655464614726,
+                    "vm": 1408
+                },
+                {
+                    "layer": "BN_25",
+                    "alias": "choice_blocks.1._layers.1.op.mbconv_bn2",
+                    "params": {
+                        "Tr": 32,
+                        "Tc": 1,
+                        "Tm": 8,
+                        "Tn": 1,
+                        "reuse_sch": "reuse_W",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            32,
+                            1,
+                            32,
+                            1,
+                            8,
+                            1
+                        ],
+                        "inter_lo": "reuse_W"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            1.800211820139777e-05,
+                            0.0027997499999999997
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            2.5649217641025683e-05,
+                            0.004032
+                        ],
+                        "bd": [
+                            1.8818304778959417e-05,
+                            0.002868
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.00014098095429119942,
+                        0.00014098095429119942
+                    ],
+                    "Eu": 0.9647515594472417,
+                    "Le2e": 0.12883504977673088,
+                    "npc": 1.0,
+                    "L_rc_tot": 0.06404211227673089,
+                    "vm": 576
+                },
+                {
+                    "layer": "ADD_26",
+                    "alias": "choice_blocks.1._layers.1.shortcut.skip_aggr",
+                    "params": {
+                        "Tr": 32,
+                        "Tc": 1,
+                        "Tm": 8,
+                        "Tn": 1,
+                        "reuse_sch": "reuse_O",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            32,
+                            1,
+                            32,
+                            1,
+                            8,
+                            1
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            3.130586738937951e-05,
+                            0.004872
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            1.4167289435897465e-05,
+                            0.0024
+                        ],
+                        "bd": [
+                            1.639538293280557e-05,
+                            0.002508
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.0001403798534278991,
+                        0.0001403798534278991
+                    ],
+                    "Eu": 0.9606381457016073,
+                    "Le2e": 0.12864267785148267,
+                    "npc": 1.0,
+                    "L_rc_tot": 0.06376949035148266,
+                    "vm": 1536
+                },
+                {
+                    "layer": "CONV_27",
+                    "alias": "choice_blocks.2._layers.0.op.mbconv_conv0_pw",
+                    "params": {
+                        "Tr": 32,
+                        "Tc": 1,
+                        "Tm": 16,
+                        "Tn": 8,
+                        "reuse_sch": "reuse_O",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            1,
+                            1,
+                            32,
+                            1,
+                            32,
+                            1,
+                            16,
+                            8
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            4.6871381456415844e-05,
+                            0.007351
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            0.00021798835547201273,
+                            0.0382540625
+                        ],
+                        "bd": [
+                            2.2505178143287985e-05,
+                            0.0035320000000000004
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.00034405451900663904,
+                        0.00034405451900663904
+                    ],
+                    "Eu": 2.3544111714616607,
+                    "Le2e": 0.7701072260646351,
+                    "npc": 3.0,
+                    "L_rc_tot": 0.46779647606463504,
+                    "vm": 1792
+                },
+                {
+                    "layer": "BN_28",
+                    "alias": "choice_blocks.2._layers.0.op.mbconv_bn0",
+                    "params": {
+                        "Tr": 16,
+                        "Tc": 1,
+                        "Tm": 48,
+                        "Tn": 1,
+                        "reuse_sch": "reuse_W",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            16,
+                            1,
+                            16,
+                            1,
+                            48,
+                            1
+                        ],
+                        "inter_lo": "reuse_W"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            2.945307647969125e-05,
+                            0.0047817499999999995
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            7.694765292307705e-05,
+                            0.012095999999999999
+                        ],
+                        "bd": [
+                            2.468364041568574e-05,
+                            0.003994
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.00020959568348827057,
+                        0.00020959568348827057
+                    ],
+                    "Eu": 1.4342913446383312,
+                    "Le2e": 0.34220413402668437,
+                    "npc": 2.0,
+                    "L_rc_tot": 0.19027425902668435,
+                    "vm": 1920
+                },
+                {
+                    "layer": "RELU_29",
+                    "alias": "choice_blocks.2._layers.0.op.mbconv_relu0",
+                    "params": {
+                        "Tr": 16,
+                        "Tc": 1,
+                        "Tm": 48,
+                        "Tn": 1,
+                        "reuse_sch": "reuse_O",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            16,
+                            1,
+                            16,
+                            1,
+                            48,
+                            1
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            2.3248406947855563e-05,
+                            0.003778
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            3.745882584615387e-05,
+                            0.006192
+                        ],
+                        "bd": [
+                            2.3472179492608817e-05,
+                            0.003814
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.00016269072595643478,
+                        0.00016269072595643478
+                    ],
+                    "Eu": 1.113314435720713,
+                    "Le2e": 0.285526028876393,
+                    "npc": 2.0,
+                    "L_rc_tot": 0.147771653876393,
+                    "vm": 1536
+                },
+                {
+                    "layer": "CONV_30",
+                    "alias": "choice_blocks.2._layers.0.op.mbconv_conv1_dw",
+                    "params": {
+                        "Tr": 16,
+                        "Tc": 1,
+                        "Tm": 16,
+                        "Tn": 1,
+                        "reuse_sch": "reuse_O",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            7,
+                            1,
+                            37,
+                            1,
+                            16,
+                            1,
+                            16,
+                            1
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            7.211664144567004e-05,
+                            0.011049625
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            0.0004420542358974364,
+                            0.07022400000000001
+                        ],
+                        "bd": [
+                            1.1252589071643993e-05,
+                            0.0017660000000000002
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.000603934780084567,
+                        0.000603934780084567
+                    ],
+                    "Eu": 4.1328066178892655,
+                    "Le2e": 1.2331519771983188,
+                    "npc": 3.0,
+                    "L_rc_tot": 0.8187535396983189,
+                    "vm": 1920
+                },
+                {
+                    "layer": "BN_31",
+                    "alias": "choice_blocks.2._layers.0.op.mbconv_bn1",
+                    "params": {
+                        "Tr": 16,
+                        "Tc": 1,
+                        "Tm": 48,
+                        "Tn": 1,
+                        "reuse_sch": "reuse_W",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            16,
+                            1,
+                            16,
+                            1,
+                            48,
+                            1
+                        ],
+                        "inter_lo": "reuse_W"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            2.945307647969125e-05,
+                            0.0047817499999999995
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            7.694765292307705e-05,
+                            0.012095999999999999
+                        ],
+                        "bd": [
+                            2.468364041568574e-05,
+                            0.003994
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.00020959568348827057,
+                        0.00020959568348827057
+                    ],
+                    "Eu": 1.4342913446383312,
+                    "Le2e": 0.17110206701334219,
+                    "npc": 1.0,
+                    "L_rc_tot": 0.09513712951334218,
+                    "vm": 1920
+                },
+                {
+                    "layer": "RELU_32",
+                    "alias": "choice_blocks.2._layers.0.op.mbconv_relu1",
+                    "params": {
+                        "Tr": 16,
+                        "Tc": 1,
+                        "Tm": 48,
+                        "Tn": 1,
+                        "reuse_sch": "reuse_O",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            16,
+                            1,
+                            16,
+                            1,
+                            48,
+                            1
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            2.3248406947855563e-05,
+                            0.003778
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            3.745882584615387e-05,
+                            0.006192
+                        ],
+                        "bd": [
+                            2.3472179492608817e-05,
+                            0.003814
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.00016269072595643478,
+                        0.00016269072595643478
+                    ],
+                    "Eu": 1.113314435720713,
+                    "Le2e": 0.1427630144381965,
+                    "npc": 1.0,
+                    "L_rc_tot": 0.0738858269381965,
+                    "vm": 1536
+                },
+                {
+                    "layer": "CONV_33",
+                    "alias": "choice_blocks.2._layers.0.op.mbconv_conv2_pw",
+                    "params": {
+                        "Tr": 8,
+                        "Tc": 1,
+                        "Tm": 10,
+                        "Tn": 48,
+                        "reuse_sch": "reuse_O",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            1,
+                            1,
+                            8,
+                            1,
+                            8,
+                            1,
+                            10,
+                            48
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            3.1434659229702196e-05,
+                            0.0050713749999999995
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            3.575123645357284e-05,
+                            0.0062890625
+                        ],
+                        "bd": [
+                            4.4807079338565435e-06,
+                            0.000691
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.0001458791353607629,
+                        0.0001458791353607629
+                    ],
+                    "Eu": 0.9982704687855601,
+                    "Le2e": 0.2654702178617958,
+                    "npc": 2.0,
+                    "L_rc_tot": 0.13252696786179577,
+                    "vm": 1888
+                },
+                {
+                    "layer": "BN_34",
+                    "alias": "choice_blocks.2._layers.0.op.mbconv_bn2",
+                    "params": {
+                        "Tr": 16,
+                        "Tc": 1,
+                        "Tm": 10,
+                        "Tn": 1,
+                        "reuse_sch": "reuse_W",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            16,
+                            1,
+                            16,
+                            1,
+                            10,
+                            1
+                        ],
+                        "inter_lo": "reuse_W"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            1.113952261033481e-05,
+                            0.00174175
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            1.6030761025641052e-05,
+                            0.00252
+                        ],
+                        "bd": [
+                            1.017287679079001e-05,
+                            0.001562
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.00011585447409658239,
+                        0.00011585447409658239
+                    ],
+                    "Eu": 0.7928076889219574,
+                    "Le2e": 0.11356007677594415,
+                    "npc": 1.0,
+                    "L_rc_tot": 0.05264313927594414,
+                    "vm": 400
+                },
+                {
+                    "layer": "GAVGPOOL_35",
+                    "alias": "global_pooling",
+                    "params": {
+                        "Tr": 16,
+                        "Tc": 1,
+                        "Tm": 10,
+                        "Tn": 1,
+                        "reuse_sch": "reuse_O",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            16,
+                            1,
+                            16,
+                            1,
+                            10,
+                            1
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            9.134911593143564e-06,
+                            0.001430125
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            1.3055958974358998e-05,
+                            0.0027800000000000004
+                        ],
+                        "bd": [
+                            5.600884917320679e-07,
+                            8.6375e-05
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        0.00010126227272905117,
+                        0.00010126227272905117
+                    ],
+                    "Eu": 0.6929512998382532,
+                    "Le2e": 0.10540989393036157,
+                    "npc": 1.0,
+                    "L_rc_tot": 0.04602020643036157,
+                    "vm": 340
+                },
+                {
+                    "layer": "FC_END",
+                    "alias": "classifier",
+                    "params": {
+                        "Tr": 1,
+                        "Tc": 1,
+                        "Tm": 6,
+                        "Tn": 10,
+                        "reuse_sch": "reuse_O",
+                        "S": 1
+                    },
+                    "params_exec": {
+                        "tile_size": [
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            6,
+                            10
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            7.788e-05,
+                            0.055
+                        ],
+                        "fd": [
+                            4.791246492864708e-06,
+                            0.000745875
+                        ],
+                        "fl": [
+                            3.1317501322509034e-07,
+                            4.6875e-05
+                        ],
+                        "cp": [
+                            2.654127420456328e-06,
+                            0.00046331249999999997
+                        ],
+                        "bd": [
+                            4.646229415682803e-07,
+                            7.0375e-05
+                        ],
+                        "bl": [
+                            3.181386565914358e-07,
+                            4.63125e-05
+                        ]
+                    },
+                    "Epc": [
+                        8.598034990956088e-05,
+                        8.598034990956088e-05
+                    ],
+                    "Eu": 0.5883750544469567,
+                    "Le2e": 0.09538650590095482,
+                    "npc": 1.0,
+                    "L_rc_tot": 0.039081880900954824,
+                    "vm": 152
+                }
+            ],
+            "ip_tot_npc": 93.0,
+            "perf_e2e_contpow_fp_lat": 5.198183875000001,
+            "perf_exec_design_contpow_fp": [
+                {
+                    "layer": "CONV_0",
+                    "alias": "stem.conv0",
+                    "params": "64_1_10_1_reuse_O_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            3,
+                            1,
+                            66,
+                            1,
+                            64,
+                            1,
+                            10,
+                            1
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            0.0006067804039212872,
+                            0.09115875
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            0.014587760213416595,
+                            2.5587731249999996
+                        ],
+                        "bd": [
+                            0.0006452219424753422,
+                            0.099504
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        0.015839762559813224,
+                        0.015839762559813224
+                    ],
+                    "Eu": null,
+                    "Le2e": 2.7494358749999996,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 1472
+                },
+                {
+                    "layer": "BN_1",
+                    "alias": "stem.bn0",
+                    "params": "64_1_10_1_reuse_W_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            64,
+                            1,
+                            64,
+                            1,
+                            10,
+                            1
+                        ],
+                        "inter_lo": "reuse_W"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            7.13224695769277e-05,
+                            0.01116375
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            0.00012824608820512841,
+                            0.02112
+                        ],
+                        "bd": [
+                            8.138301432632008e-05,
+                            0.012496
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        0.0002809515721083762,
+                        0.0002809515721083762
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.04477975,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 1360
+                },
+                {
+                    "layer": "CONV_2",
+                    "alias": "choice_blocks.0._layers.0.op.mbconv_conv0_pw",
+                    "params": "16_1_30_10_reuse_O_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            1,
+                            1,
+                            16,
+                            1,
+                            16,
+                            1,
+                            30,
+                            10
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            0.00022129803629682718,
+                            0.034513
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            0.0016388256660151272,
+                            0.28763249999999996
+                        ],
+                        "bd": [
+                            0.00013278927904652882,
+                            0.021296000000000002
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        0.001992912981358483,
+                        0.001992912981358483
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.34344149999999996,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 1880
+                },
+                {
+                    "layer": "BN_3",
+                    "alias": "choice_blocks.0._layers.0.op.mbconv_bn0",
+                    "params": "26_1_30_1_reuse_W_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            26,
+                            1,
+                            26,
+                            1,
+                            30,
+                            1
+                        ],
+                        "inter_lo": "reuse_W"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            0.00013697653922936247,
+                            0.022052000000000002
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            0.0003907498000000006,
+                            0.06434999999999999
+                        ],
+                        "bd": [
+                            0.00014470723153163083,
+                            0.023091250000000004
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        0.0006724335707609939,
+                        0.0006724335707609939
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.10949325,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 1800
+                },
+                {
+                    "layer": "RELU_4",
+                    "alias": "choice_blocks.0._layers.0.op.mbconv_relu0",
+                    "params": "32_1_30_1_reuse_O_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            32,
+                            1,
+                            32,
+                            1,
+                            30,
+                            1
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            0.00013046827122100603,
+                            0.021008
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            0.00018729412923076938,
+                            0.030959999999999998
+                        ],
+                        "bd": [
+                            0.00013278927904652882,
+                            0.021296000000000002
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        0.0004505516794983043,
+                        0.0004505516794983043
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.073264,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 1920
+                },
+                {
+                    "layer": "CONV_5",
+                    "alias": "choice_blocks.0._layers.0.op.mbconv_conv1_dw",
+                    "params": "8_1_30_1_reuse_O_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            5,
+                            1,
+                            19,
+                            1,
+                            8,
+                            1,
+                            30,
+                            1
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            0.0006572734602681462,
+                            0.100472
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            0.002368147692307695,
+                            0.37620000000000003
+                        ],
+                        "bd": [
+                            6.639463952326441e-05,
+                            0.010648000000000001
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        0.0030918157920991054,
+                        0.0030918157920991054
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.48732000000000003,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 1920
+                },
+                {
+                    "layer": "BN_6",
+                    "alias": "choice_blocks.0._layers.0.op.mbconv_bn1",
+                    "params": "22_1_30_1_reuse_W_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            22,
+                            1,
+                            22,
+                            1,
+                            30,
+                            1
+                        ],
+                        "inter_lo": "reuse_W"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            7.174240361885948e-05,
+                            0.011548
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            0.00019838066769230803,
+                            0.032670000000000005
+                        ],
+                        "bd": [
+                            7.346674831605873e-05,
+                            0.011723250000000001
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        0.00034358981962722627,
+                        0.00034358981962722627
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.05594125000000001,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 1560
+                },
+                {
+                    "layer": "RELU_7",
+                    "alias": "choice_blocks.0._layers.0.op.mbconv_relu1",
+                    "params": "32_1_30_1_reuse_O_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            32,
+                            1,
+                            32,
+                            1,
+                            30,
+                            1
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            6.523413561050302e-05,
+                            0.010504
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            9.364706461538469e-05,
+                            0.015479999999999999
+                        ],
+                        "bd": [
+                            6.639463952326441e-05,
+                            0.010648000000000001
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        0.00022527583974915215,
+                        0.00022527583974915215
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.036632,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 1920
+                },
+                {
+                    "layer": "CONV_8",
+                    "alias": "choice_blocks.0._layers.0.op.mbconv_conv2_pw",
+                    "params": "22_1_4_30_reuse_O_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            1,
+                            1,
+                            22,
+                            1,
+                            22,
+                            1,
+                            4,
+                            30
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            8.068180615991594e-05,
+                            0.0129795
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            0.00011555879886272034,
+                            0.0203041875
+                        ],
+                        "bd": [
+                            2.7514750988101507e-05,
+                            0.00411675
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        0.0002237553560107378,
+                        0.0002237553560107378
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.0374004375,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 1736
+                },
+                {
+                    "layer": "BN_9",
+                    "alias": "choice_blocks.0._layers.0.op.mbconv_bn2",
+                    "params": "64_1_4_1_reuse_W_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            64,
+                            1,
+                            64,
+                            1,
+                            4,
+                            1
+                        ],
+                        "inter_lo": "reuse_W"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            2.7100727353370487e-05,
+                            0.0041477499999999995
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            2.5649217641025683e-05,
+                            0.004224
+                        ],
+                        "bd": [
+                            3.1526814347436424e-05,
+                            0.004712
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        8.42767593418326e-05,
+                        8.42767593418326e-05
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.013083750000000002,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 544
+                },
+                {
+                    "layer": "CONV_10",
+                    "alias": "choice_blocks.1._layers.0.op.mbconv_conv0_pw",
+                    "params": "32_1_12_4_reuse_O_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            1,
+                            1,
+                            32,
+                            1,
+                            32,
+                            1,
+                            12,
+                            4
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            3.691890737434672e-05,
+                            0.0056465
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            0.00032548358498723725,
+                            0.057100124999999995
+                        ],
+                        "bd": [
+                            3.8900561076093555e-05,
+                            0.00604
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        0.0004013030534376775,
+                        0.0004013030534376775
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.068786625,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 1120
+                },
+                {
+                    "layer": "BN_11",
+                    "alias": "choice_blocks.1._layers.0.op.mbconv_bn0",
+                    "params": "64_1_12_1_reuse_W_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            64,
+                            1,
+                            64,
+                            1,
+                            12,
+                            1
+                        ],
+                        "inter_lo": "reuse_W"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            4.0209376438804574e-05,
+                            0.00632375
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            7.694765292307705e-05,
+                            0.012672000000000001
+                        ],
+                        "bd": [
+                            4.374640476840125e-05,
+                            0.00676
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        0.00016090343413028288,
+                        0.00016090343413028288
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.02575575,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 1632
+                },
+                {
+                    "layer": "RELU_12",
+                    "alias": "choice_blocks.1._layers.0.op.mbconv_relu0",
+                    "params": "64_1_12_1_reuse_O_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            64,
+                            1,
+                            64,
+                            1,
+                            12,
+                            1
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            3.747464342958379e-05,
+                            0.005896
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            3.745882584615387e-05,
+                            0.006192
+                        ],
+                        "bd": [
+                            3.8900561076093555e-05,
+                            0.00604
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        0.00011383403035183122,
+                        0.00011383403035183122
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.018128,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 1536
+                },
+                {
+                    "layer": "CONV_13",
+                    "alias": "choice_blocks.1._layers.0.op.mbconv_conv1_dw",
+                    "params": "32_1_6_1_reuse_O_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            7,
+                            1,
+                            69,
+                            1,
+                            32,
+                            1,
+                            6,
+                            1
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            9.601653206352846e-05,
+                            0.014688
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            0.0006630813538461546,
+                            0.10533600000000001
+                        ],
+                        "bd": [
+                            2.973586826036994e-05,
+                            0.004504
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        0.000788833754170053,
+                        0.000788833754170053
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.12452800000000001,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 1296
+                },
+                {
+                    "layer": "BN_14",
+                    "alias": "choice_blocks.1._layers.0.op.mbconv_bn1",
+                    "params": "32_1_12_1_reuse_W_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            32,
+                            1,
+                            32,
+                            1,
+                            12,
+                            1
+                        ],
+                        "inter_lo": "reuse_W"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            2.1472054724012675e-05,
+                            0.0033757500000000003
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            3.8473826461538524e-05,
+                            0.0063360000000000005
+                        ],
+                        "bd": [
+                            2.1873202384200624e-05,
+                            0.00338
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        8.181908356975182e-05,
+                        8.181908356975182e-05
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.013091750000000003,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 864
+                },
+                {
+                    "layer": "RELU_15",
+                    "alias": "choice_blocks.1._layers.0.op.mbconv_relu1",
+                    "params": "32_1_12_1_reuse_O_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            32,
+                            1,
+                            32,
+                            1,
+                            12,
+                            1
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            1.8737321714791895e-05,
+                            0.002948
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            1.8729412923076936e-05,
+                            0.003096
+                        ],
+                        "bd": [
+                            1.9450280538046778e-05,
+                            0.00302
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        5.691701517591561e-05,
+                        5.691701517591561e-05
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.009064,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 768
+                },
+                {
+                    "layer": "CONV_16",
+                    "alias": "choice_blocks.1._layers.0.op.mbconv_conv2_pw",
+                    "params": "32_1_8_12_reuse_O_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            1,
+                            1,
+                            32,
+                            1,
+                            32,
+                            1,
+                            8,
+                            12
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            2.420678773323346e-05,
+                            0.0038035
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            0.00010955692406601057,
+                            0.0192300625
+                        ],
+                        "bd": [
+                            1.639538293280557e-05,
+                            0.002508
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        0.0001501590947320496,
+                        0.0001501590947320496
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.0255415625,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 1472
+                },
+                {
+                    "layer": "BN_17",
+                    "alias": "choice_blocks.1._layers.0.op.mbconv_bn2",
+                    "params": "32_1_8_1_reuse_W_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            32,
+                            1,
+                            32,
+                            1,
+                            8,
+                            1
+                        ],
+                        "inter_lo": "reuse_W"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            1.800211820139777e-05,
+                            0.0027997499999999997
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            2.5649217641025683e-05,
+                            0.004224
+                        ],
+                        "bd": [
+                            1.8818304778959417e-05,
+                            0.002868
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        6.246964062138287e-05,
+                        6.246964062138287e-05
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.009891750000000001,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 576
+                },
+                {
+                    "layer": "CONV_18",
+                    "alias": "choice_blocks.1._layers.1.op.mbconv_conv0_pw",
+                    "params": "16_1_24_8_reuse_O_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            1,
+                            1,
+                            16,
+                            1,
+                            16,
+                            1,
+                            24,
+                            8
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            4.384314777518593e-05,
+                            0.006801000000000001
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            0.0003270298559003268,
+                            0.05738812499999999
+                        ],
+                        "bd": [
+                            2.8614973353770394e-05,
+                            0.004556
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        0.0003994879770292831,
+                        0.0003994879770292831
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.06874512499999999,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 1408
+                },
+                {
+                    "layer": "BN_19",
+                    "alias": "choice_blocks.1._layers.1.op.mbconv_bn0",
+                    "params": "32_1_24_1_reuse_W_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            32,
+                            1,
+                            32,
+                            1,
+                            24,
+                            1
+                        ],
+                        "inter_lo": "reuse_W"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            3.188186429185739e-05,
+                            0.00510375
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            7.694765292307705e-05,
+                            0.012672000000000001
+                        ],
+                        "bd": [
+                            3.103789519992424e-05,
+                            0.004916
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        0.00013986741241485867,
+                        0.00013986741241485867
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.02269175,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 1728
+                },
+                {
+                    "layer": "RELU_20",
+                    "alias": "choice_blocks.1._layers.1.op.mbconv_relu0",
+                    "params": "32_1_24_1_reuse_O_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            32,
+                            1,
+                            32,
+                            1,
+                            24,
+                            1
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            2.7990485775098306e-05,
+                            0.004484
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            3.745882584615387e-05,
+                            0.006192
+                        ],
+                        "bd": [
+                            2.8614973353770394e-05,
+                            0.004556
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        9.406428497502257e-05,
+                        9.406428497502257e-05
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.015231999999999999,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 1536
+                },
+                {
+                    "layer": "CONV_21",
+                    "alias": "choice_blocks.1._layers.1.op.mbconv_conv1_dw",
+                    "params": "32_1_12_1_reuse_O_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            7,
+                            1,
+                            38,
+                            1,
+                            32,
+                            1,
+                            12,
+                            1
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            0.00011482907341967897,
+                            0.017575
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            0.0013261627076923091,
+                            0.21067200000000003
+                        ],
+                        "bd": [
+                            3.8900561076093555e-05,
+                            0.00604
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        0.0014798923421880815,
+                        0.0014798923421880815
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.23428700000000002,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 1848
+                },
+                {
+                    "layer": "BN_22",
+                    "alias": "choice_blocks.1._layers.1.op.mbconv_bn1",
+                    "params": "32_1_24_1_reuse_W_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            32,
+                            1,
+                            32,
+                            1,
+                            24,
+                            1
+                        ],
+                        "inter_lo": "reuse_W"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            3.188186429185739e-05,
+                            0.00510375
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            7.694765292307705e-05,
+                            0.012672000000000001
+                        ],
+                        "bd": [
+                            3.103789519992424e-05,
+                            0.004916
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        0.00013986741241485867,
+                        0.00013986741241485867
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.02269175,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 1728
+                },
+                {
+                    "layer": "RELU_23",
+                    "alias": "choice_blocks.1._layers.1.op.mbconv_relu1",
+                    "params": "32_1_24_1_reuse_O_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            32,
+                            1,
+                            32,
+                            1,
+                            24,
+                            1
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            2.7990485775098306e-05,
+                            0.004484
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            3.745882584615387e-05,
+                            0.006192
+                        ],
+                        "bd": [
+                            2.8614973353770394e-05,
+                            0.004556
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        9.406428497502257e-05,
+                        9.406428497502257e-05
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.015231999999999999,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 1536
+                },
+                {
+                    "layer": "CONV_24",
+                    "alias": "choice_blocks.1._layers.1.op.mbconv_conv2_pw",
+                    "params": "16_1_8_24_reuse_O_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            1,
+                            1,
+                            16,
+                            1,
+                            16,
+                            1,
+                            8,
+                            24
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            4.3555999842134635e-05,
+                            0.0069630000000000004
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            0.0001111978403637155,
+                            0.019532125
+                        ],
+                        "bd": [
+                            1.639538293280557e-05,
+                            0.002508
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        0.00017114922313865572,
+                        0.00017114922313865572
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.029003125,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 1408
+                },
+                {
+                    "layer": "BN_25",
+                    "alias": "choice_blocks.1._layers.1.op.mbconv_bn2",
+                    "params": "32_1_8_1_reuse_W_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            32,
+                            1,
+                            32,
+                            1,
+                            8,
+                            1
+                        ],
+                        "inter_lo": "reuse_W"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            1.800211820139777e-05,
+                            0.0027997499999999997
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            2.5649217641025683e-05,
+                            0.004224
+                        ],
+                        "bd": [
+                            1.8818304778959417e-05,
+                            0.002868
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        6.246964062138287e-05,
+                        6.246964062138287e-05
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.009891750000000001,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 576
+                },
+                {
+                    "layer": "ADD_26",
+                    "alias": "choice_blocks.1._layers.1.shortcut.skip_aggr",
+                    "params": "32_1_8_1_reuse_O_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            32,
+                            1,
+                            32,
+                            1,
+                            8,
+                            1
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            3.130586738937951e-05,
+                            0.004872
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            1.4167289435897465e-05,
+                            0.0024
+                        ],
+                        "bd": [
+                            1.639538293280557e-05,
+                            0.002508
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        6.186853975808255e-05,
+                        6.186853975808255e-05
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.009779999999999999,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 1536
+                },
+                {
+                    "layer": "CONV_27",
+                    "alias": "choice_blocks.2._layers.0.op.mbconv_conv0_pw",
+                    "params": "32_1_16_8_reuse_O_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            1,
+                            1,
+                            32,
+                            1,
+                            32,
+                            1,
+                            16,
+                            8
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            7.514901516456544e-05,
+                            0.011673
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            0.0006539650664160382,
+                            0.1147621875
+                        ],
+                        "bd": [
+                            6.751553442986395e-05,
+                            0.010596000000000001
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        0.0007966296160104675,
+                        0.0007966296160104675
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.13703118749999998,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 1792
+                },
+                {
+                    "layer": "BN_28",
+                    "alias": "choice_blocks.2._layers.0.op.mbconv_bn0",
+                    "params": "16_1_48_1_reuse_W_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            16,
+                            1,
+                            16,
+                            1,
+                            48,
+                            1
+                        ],
+                        "inter_lo": "reuse_W"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            5.270148342754681e-05,
+                            0.00855975
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            0.0001538953058461541,
+                            0.025344000000000002
+                        ],
+                        "bd": [
+                            4.936728083137148e-05,
+                            0.007988
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        0.00025596407010507237,
+                        0.00025596407010507237
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.041891750000000005,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 1920
+                },
+                {
+                    "layer": "RELU_29",
+                    "alias": "choice_blocks.2._layers.0.op.mbconv_relu0",
+                    "params": "16_1_48_1_reuse_O_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            16,
+                            1,
+                            16,
+                            1,
+                            48,
+                            1
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            4.6496813895711125e-05,
+                            0.007556
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            7.491765169230774e-05,
+                            0.012384
+                        ],
+                        "bd": [
+                            4.6944358985217634e-05,
+                            0.007628
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        0.0001683588245732365,
+                        0.0001683588245732365
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.027568,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 1536
+                },
+                {
+                    "layer": "CONV_30",
+                    "alias": "choice_blocks.2._layers.0.op.mbconv_conv1_dw",
+                    "params": "16_1_16_1_reuse_O_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            7,
+                            1,
+                            37,
+                            1,
+                            16,
+                            1,
+                            16,
+                            1
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            0.0002163499243370101,
+                            0.033148875
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            0.0013261627076923091,
+                            0.21067200000000003
+                        ],
+                        "bd": [
+                            3.3757767214931975e-05,
+                            0.005298000000000001
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        0.0015762703992442512,
+                        0.0015762703992442512
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.24911887500000002,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 1920
+                },
+                {
+                    "layer": "BN_31",
+                    "alias": "choice_blocks.2._layers.0.op.mbconv_bn1",
+                    "params": "16_1_48_1_reuse_W_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            16,
+                            1,
+                            16,
+                            1,
+                            48,
+                            1
+                        ],
+                        "inter_lo": "reuse_W"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            2.945307647969125e-05,
+                            0.0047817499999999995
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            7.694765292307705e-05,
+                            0.012672000000000001
+                        ],
+                        "bd": [
+                            2.468364041568574e-05,
+                            0.003994
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        0.00013108436981845403,
+                        0.00013108436981845403
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.02144775,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 1920
+                },
+                {
+                    "layer": "RELU_32",
+                    "alias": "choice_blocks.2._layers.0.op.mbconv_relu1",
+                    "params": "16_1_48_1_reuse_O_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            16,
+                            1,
+                            16,
+                            1,
+                            48,
+                            1
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            2.3248406947855563e-05,
+                            0.003778
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            3.745882584615387e-05,
+                            0.006192
+                        ],
+                        "bd": [
+                            2.3472179492608817e-05,
+                            0.003814
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        8.417941228661825e-05,
+                        8.417941228661825e-05
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.013784,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 1536
+                },
+                {
+                    "layer": "CONV_33",
+                    "alias": "choice_blocks.2._layers.0.op.mbconv_conv2_pw",
+                    "params": "8_1_10_48_reuse_O_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            1,
+                            1,
+                            8,
+                            1,
+                            8,
+                            1,
+                            10,
+                            48
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            5.427175460703399e-05,
+                            0.008796749999999999
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            7.150247290714567e-05,
+                            0.012578125
+                        ],
+                        "bd": [
+                            8.961415867713087e-06,
+                            0.001382
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        0.00013473564338189274,
+                        0.00013473564338189274
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.022756875000000003,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 1888
+                },
+                {
+                    "layer": "BN_34",
+                    "alias": "choice_blocks.2._layers.0.op.mbconv_bn2",
+                    "params": "16_1_10_1_reuse_W_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            16,
+                            1,
+                            16,
+                            1,
+                            10,
+                            1
+                        ],
+                        "inter_lo": "reuse_W"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            1.113952261033481e-05,
+                            0.00174175
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            1.6030761025641052e-05,
+                            0.00264
+                        ],
+                        "bd": [
+                            1.017287679079001e-05,
+                            0.001562
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        3.734316042676588e-05,
+                        3.734316042676588e-05
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.00594375,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 400
+                },
+                {
+                    "layer": "GAVGPOOL_35",
+                    "alias": "global_pooling",
+                    "params": "16_1_10_1_reuse_O_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            null,
+                            null,
+                            16,
+                            1,
+                            16,
+                            1,
+                            10,
+                            1
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            9.134911593143564e-06,
+                            0.001430125
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            1.3055958974358998e-05,
+                            0.0027800000000000004
+                        ],
+                        "bd": [
+                            5.600884917320679e-07,
+                            8.6375e-05
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        2.275095905923463e-05,
+                        2.275095905923463e-05
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.0042965,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 340
+                },
+                {
+                    "layer": "FC_END",
+                    "alias": "classifier",
+                    "params": "1_1_6_10_reuse_O_S1",
+                    "params_exec": {
+                        "tile_size": [
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            6,
+                            10
+                        ],
+                        "inter_lo": "reuse_O"
+                    },
+                    "params_pres": {
+                        "backup_batch_size": 1
+                    },
+                    "cost_brk": {
+                        "rb": [
+                            0,
+                            0
+                        ],
+                        "fd": [
+                            4.3502858777197485e-06,
+                            0.00067775
+                        ],
+                        "fl": [
+                            0,
+                            0
+                        ],
+                        "cp": [
+                            2.654127420456328e-06,
+                            0.00046331249999999997
+                        ],
+                        "bd": [
+                            4.646229415682803e-07,
+                            7.0375e-05
+                        ],
+                        "bl": [
+                            0,
+                            0
+                        ]
+                    },
+                    "Epc": [
+                        7.469036239744356e-06,
+                        7.469036239744356e-06
+                    ],
+                    "Eu": null,
+                    "Le2e": 0.0012114374999999998,
+                    "npc": 1,
+                    "L_rc_tot": null,
+                    "vm": 152
+                }
+            ],
+            "active_time": 10.403878312500002,
+            "recharge_time": 17.509730109283478,
+            "imc_prop": 50.03609501319799
+        },
+        "network_nvm_usage": [
+            [
+                5120,
+                540
+            ],
+            [
+                5120,
+                80
+            ],
+            [
+                15360,
+                600
+            ],
+            [
+                15360,
+                240
+            ],
+            [
+                15360,
+                0
+            ],
+            [
+                15360,
+                300
+            ],
+            [
+                7680,
+                240
+            ],
+            [
+                7680,
+                0
+            ],
+            [
+                7680,
+                240
+            ],
+            [
+                1024,
+                32
+            ],
+            [
+                3072,
+                96
+            ],
+            [
+                3072,
+                96
+            ],
+            [
+                3072,
+                0
+            ],
+            [
+                3072,
+                168
+            ],
+            [
+                1536,
+                96
+            ],
+            [
+                1536,
+                0
+            ],
+            [
+                1536,
+                192
+            ],
+            [
+                1024,
+                64
+            ],
+            [
+                3072,
+                384
+            ],
+            [
+                3072,
+                192
+            ],
+            [
+                3072,
+                0
+            ],
+            [
+                3072,
+                336
+            ],
+            [
+                3072,
+                192
+            ],
+            [
+                3072,
+                0
+            ],
+            [
+                3072,
+                384
+            ],
+            [
+                1024,
+                64
+            ],
+            [
+                1536,
+                0
+            ],
+            [
+                6144,
+                768
+            ],
+            [
+                6144,
+                384
+            ],
+            [
+                6144,
+                0
+            ],
+            [
+                6144,
+                672
+            ],
+            [
+                3072,
+                384
+            ],
+            [
+                3072,
+                0
+            ],
+            [
+                3072,
+                960
+            ],
+            [
+                640,
+                80
+            ],
+            [
+                640,
+                0
+            ],
+            [
+                40,
+                120
+            ],
+            [
+                15360,
+                7904
+            ]
+        ],
+        "lat_intpow": 27.91360842178348,
+        "accuracy": 62.198846284356975,
+        "imo": 50.03609501319799,
+        "score": 1.0270841010503924,
+        "fine_tune_result": {
+            "supernet_chkpt_fname": null,
+            "max_val_acc": 89.21
+        }
+    },
+    null
+]
