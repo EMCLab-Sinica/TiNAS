@@ -170,7 +170,7 @@ class Settings(object): ##default settintgs & discription
         'MUT_RATIO': 0.5,  
         'EVOSEARCH_LOGFNAME' : CURRENT_HOME_PATH + "/TiNAS/NASBase/train_log/" + GLOBAL_SETTINGS['EXP_SUFFIX'] + "_evosearchlog.json",   
         'EVOSEARCH_SCORE_TYPE' : 'ACC_IMC',  # please see evolution_finder.py: ACC | ACC_IMC | ACC_IMO_LREQ | ACC_LREQ
-        'EVOSEARCH_TRIALS': ,   # different seeds
+        'EVOSEARCH_TRIALS': 1,   # different seeds
         
         # Optional: This checks only NVM constraints, and it is only for getting results in a shorter time.        
         'EVOSEARCH_BYPASS_EFFICIENCY' : False,
