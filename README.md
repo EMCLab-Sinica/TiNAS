@@ -16,7 +16,7 @@ We adapt the search space optimizer and evolutionary search strategy of TinyNAS 
 
 The derived TiNAS solutions are deployed on the Texas Instruments MSP430FR5994 LaunchPad and executed using an intermittent inference library that is also included in this repository. 
 
-A demo video comparing solutions found by TiNAS and two variants (TiNAS-M: performing direct IMO minimization and TiNAS-U: unaware of IMO) can be found [here](https://youtu.be/xxxxxxx)
+A demo video comparing solutions found by TiNAS and two variants (TiNAS-M: performing direct IMO minimization and TiNAS-U: unaware of IMO) can be found [here](https://youtu.be/ylc0P3ObJEg)
 
 
 
