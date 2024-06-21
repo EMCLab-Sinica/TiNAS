@@ -10,7 +10,7 @@ TiNAS leverages two key guidelines related to IMO sensitivity, i.e., the varying
 * Guideline 1: Reduce the search space by excluding architectural parameters with low IMO sensitivity, thus improving accuracy without increasing the IMO
 * Guideline 2: Focus the search on network blocks with high IMO sensitivity, to quickly find an intermittent-friendly DNN with high accuracy and low IMO
 
-We build TiNAS on top of the integration between two state-of-the-art NAS frameworks, namely [TinyNAS] (https://github.com/mit-han-lab/mcunet) for MCUs and [iNAS](https://github.com/EMCLab-Sinica/Intermittent-aware-NAS) for intermittent systems. 
+We build TiNAS on top of the integration between two state-of-the-art NAS frameworks, namely [TinyNAS](https://github.com/mit-han-lab/mcunet) for MCUs and [iNAS](https://github.com/EMCLab-Sinica/Intermittent-aware-NAS) for intermittent systems. 
 We adapt the search space optimizer and evolutionary search strategy of TinyNAS to incorporate the above two guidelines. 
 
 
