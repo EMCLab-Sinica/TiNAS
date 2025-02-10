@@ -230,8 +230,11 @@ def run_supernet_train(global_settings: Settings, dataset=None, supernet_chkpt_f
             best_val_acc = val_acc
             best_val_loss = val_loss            
             if supernet_chkpt_fname is not None:
-                torch.save(model.state_dict(), supernet_chkpt_fname)
-                logging.info('Save best checkpoints to %s' % supernet_chkpt_fname)
+                if not global_settings.NAS_SETTINGS_GENERAL['SEARCH_TIME_TESTING']:
+                    torch.save(model.state_dict(), supernet_chkpt_fname)
+                    logging.info('Save best checkpoints to %s' % supernet_chkpt_fname)
+                else:
+                    logging.info('Testing search time, skipping saving checkpoints')
             else:
                 logging.warning('Model checkpoint filename is not specified, so the best checkpoint cannot be saved')
         logging.info(

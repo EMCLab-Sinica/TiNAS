@@ -184,6 +184,8 @@ class PlatPerf:
             ip_tot_npc = np.sum([l['npc'] for l in exec_design_intpow]) if e2e_lat_intpow != -1 else -1        # total power cycles
             ip_tot_rc = np.sum([l['L_rc_tot'] for l in exec_design_intpow]) if e2e_lat_intpow != -1 else -1    # total recharge time
             ip_tot_rb = np.sum([l['cost_brk']['rb'][1] * l['npc'] for l in exec_design_intpow]) if e2e_lat_intpow != -1 else -1
+
+            nvm_usage = exec_design_intpow[0]['nvm_usage']
                                     
             # -- get perf for CONT pow                 
             # cont pow performance - fixed params : same as intpow        
@@ -220,6 +222,8 @@ class PlatPerf:
                 "recharge_time": ip_tot_rc,
                 # proportion
                 "imc_prop" :  int_mng_cost_proportion_cpfp,
+
+                "nvm_usage": nvm_usage,
             } 
                                         
         except Exception as e:
@@ -271,6 +275,7 @@ class PlatPerf:
                                                 'npc' : sols[each_layer['name']]['best_sol'][0]['npc'][0],
                                                 'L_rc_tot' : sols[each_layer['name']]['best_sol'][0]['L_rc_tot'],
                                                 'vm' : sols[each_layer['name']]['best_sol'][0]['vm'],                                            
+                                                'nvm_usage': sols[each_layer['name']]['fail_c2'][0],
                                                 })
             
             return latency, network_exec_design, error
@@ -291,6 +296,7 @@ class PlatPerf:
                                                 'Le2e' : cost_stats['Le2e'], 'npc' : cost_stats['npc'][0], 
                                                 'L_rc_tot' : cost_stats['L_rc_tot'],
                                                 'vm' : cost_stats['vm'],                                            
+                                                'nvm_usage': None,
                                                 })
                 else:
                     return -1, None, cost_stats['reason']

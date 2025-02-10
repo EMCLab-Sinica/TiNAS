@@ -1,7 +1,3 @@
-'''
-Simple caching mechanism for EvoSearch
-'''
-
 import os, sys
 import pprint
 import enum

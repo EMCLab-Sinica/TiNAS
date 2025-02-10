@@ -4,6 +4,7 @@ import json
 import os, sys
 from pathlib import Path
 import pprint
+import ast
 
 from NASBase.model.mnas_ss import (
     # CIFAR 10
@@ -28,16 +29,16 @@ from NASBase.model.mnas_ss import (
 
     MOBILENET_V2_NUM_OUT_CHANNELS_HAR,
     
-    # KWS
-    EXP_FACTORS_KWS,
-    KERNEL_SIZES_KWS,
-    MOBILENET_NUM_LAYERS_EXPLICIT_KWS,
-    SUPPORT_SKIP_KWS,
+    # MSWC
+    EXP_FACTORS_MSWC,
+    KERNEL_SIZES_MSWC,
+    MOBILENET_NUM_LAYERS_EXPLICIT_MSWC,
+    SUPPORT_SKIP_MSWC,
 
-    WIDTH_MULTIPLIER_KWS,
-    INPUT_RESOLUTION_KWS,
+    WIDTH_MULTIPLIER_MSWC,
+    INPUT_RESOLUTION_MSWC,
 
-    MOBILENET_V2_NUM_OUT_CHANNELS_KWS,
+    MOBILENET_V2_NUM_OUT_CHANNELS_MSWC,
 )
 
 CURRENT_DIR_PATH = os.path.dirname(os.path.realpath(__file__))
@@ -72,7 +73,7 @@ SETTINGS_CATEGORIES = (
 class Settings(object): ##default settintgs & discription
     
     GLOBAL_SETTINGS = {
-        # should be different for HAR/KWS
+        # should be different for HAR/MSWC
         'EXP_SUFFIX' : "test",
         'USE_REMOTE_LOGGER' : True,
         'REMOTE_LOGGER_RUN_NAME_SUFFIX': '',
@@ -93,7 +94,7 @@ class Settings(object): ##default settintgs & discription
         'MCU_TYPE' : 'MSP430',   # MSP430   |  MSP432
         'REHM' : 2800, # 75, 300.0,  # ehm equivalent resistance (ohm)
         'VSUP' : 5.892, # 5.0, 3.0 (V)
-        'EAV_SAFE_MARGIN' : 0.60, # 0.10, 0.15, 0.20, ..., 0.55, # available energy will be reduced by this ratio
+        'EAV_SAFE_MARGIN' : 0.60, # 0.10, 0.15, 0.20, ..., 0.55, # pessimistic safety margin - available energy will be reduced by this ratio
         'DATA_SZ' : 2, # data size in bytes
         'POW_TYPE' : 'INT',
         'CPU_CLOCK': 16000000,         
@@ -105,14 +106,15 @@ class Settings(object): ##default settintgs & discription
         # * LAT_E2E_REQ for latency
         # * IMC_CONSTRAINT for imc
         #
-        # A constraint is skipped if the value is <= 0        
-        'VM_CAPACITY' : (4096-2048),  # in bytes, note: leave room for application stack
-        'NVM_CAPACITY' : 1000000,    # total capacity across one of more FRAM chips
-        'NVM_CAPACITY_ALLOCATION' : [1000000, 1000000], # if two FRAM chips, one for features and another for weights
-        'LAT_E2E_REQ' : 10000, # by default no e2e latency constraint (seconds)
-        'CCAP' : 0.005,  # capacitance (F)
-        'VON' : 4.535, # (V)
-        'VOFF' : 3.290, # (V)
+        # A constraint is skipped if the value is <= 0
+        #'VM_CAPACITY' : (4096-2048), 
+        'VM_CAPACITY' : (4096-2048),  # in bytes, 400 bytes for application stack
+        'NVM_CAPACITY' : 1000000,    # total capacity across two FRAM chips
+        'NVM_CAPACITY_ALLOCATION' : [1000000, 1000000], # two FRAM chips model, one for features and another for weights
+        'LAT_E2E_REQ' : 10000, # by default no e2e latency req (seconds)
+        'CCAP' : 0.005, # 0.005, #0.04, # 0.005, # capacitance (F)
+        'VON' : 4.535, # 3.279, 2.99 (V)
+        'VOFF' : 3.290, # 3.193, 2.8 (V)
         'IMC_CONSTRAINT': 50,  # 50 means 50%
         
         # obtained by running tests on current EHM
@@ -130,13 +132,16 @@ class Settings(object): ##default settintgs & discription
     NAS_SETTINGS_GENERAL = {        
         'SEED'  : 123,    
         'MODEL_FN_TYPE' : 'MODEL_FN_CONV2D',      # [MODEL_FN_CONV2D | MODEL_FN_CONV1D | MODEL_FN_FC]
-        'STAGES': '1,2,3,4',  # run all stages by default [1: ss_opt, 2: train_supernet, 3: evo_search, 4: fine_tune_best_sol]
+        'STAGES': '1,2,3,4',  # run all stages by default
                
         # related to training        
-        'CHECKPOINT_DIR' : CURRENT_HOME_PATH + '/TiNAS/NASBase/checkpoints/', 
+        'CHECKPOINT_DIR' : CURRENT_HOME_PATH + '/TiNAS/NASBase/checkpoints/', # str(Path.home()) + '/DL-sandpit2/TiNAS/NASBase/checkpoints/',                
         'DATASET' : 'CIFAR10',
         
-        # optimizer settings        
+        # check MCUNet training parameters
+
+        # optimizer settings
+        # keep the same for HAR/MSWC - not optimizing training process
         'TRAIN_OPT_MOM' : 0.9,    # momentum
         'TRAIN_OPT_WD' : 5e-5, # 4e-5, #3e-4,    # weight decay
 
@@ -144,11 +149,14 @@ class Settings(object): ##default settintgs & discription
         
         # debug related
         'TRAIN_PRINT_FREQ' : 100,   # print frequency of training        
+
+        'SEARCH_TIME_TESTING': False,
     }
     
-    # Search space optimization default settings    
+    # Search space optimization default settings
+    # SUBNET_SAMPLE_SIZE may be different for different search spaces
     NAS_SSOPTIMIZER_SETTINGS = {
-        'SUBNET_SAMPLE_SIZE' : 1000,    
+        'SUBNET_SAMPLE_SIZE' : 1000,
         'VALID_SUBNETS_THRESHOLD': 0.1, # 0.05 or some other ratios
         'DO_RESAMPLING': False,
         'SSOPT_POLICY' : SSOptPolicy.FLOPS,
@@ -163,25 +171,30 @@ class Settings(object): ##default settintgs & discription
     # POP_SIZE and GENERATIONS are per-dataset
     NAS_EVOSEARCH_SETTINGS = {
         'POP_SIZE' : 64,
-        'GENERATIONS' : 30,  
-        # use evo_hyperparam_tuning for PARENT_RATIO, MUT_PROB and MUT_RATIO
-        'PARENT_RATIO' : 0.2,         
+        'GENERATIONS' : 30,  # MCUNet also converges very fast
+        # how PARENT_RATIO, MUT_PROB and MUT_RATIO affect convergence?
+        'PARENT_RATIO' : 0.2,  # use the same as MCUNet # 0.1, 0.2, 0.3
+        # PARENT_RATIO 0.2 is also used in oneshot
+        # Check different probs and ratios
         'MUT_PROB': 0.05,
-        'MUT_RATIO': 0.5,  
+        'MUT_RATIO': 0.5,  # 0.2, 0.4, 0.5, 0.6
         'EVOSEARCH_LOGFNAME' : CURRENT_HOME_PATH + "/TiNAS/NASBase/train_log/" + GLOBAL_SETTINGS['EXP_SUFFIX'] + "_evosearchlog.json",   
-        'EVOSEARCH_SCORE_TYPE' : 'ACC_IMC',  # please see evolution_finder.py: ACC | ACC_IMC | ACC_IMO_LREQ | ACC_LREQ
-        'EVOSEARCH_TRIALS': 1,   # different seeds
+        'EVOSEARCH_SCORE_TYPE' : 'ACC_IMC',  # 'ACC'
+        'EVOSEARCH_TRIALS': 1,
         
-        # Optional: This checks only NVM constraints, and it is only for getting results in a shorter time.        
+        # This checks only NVM constraints, and it is only for getting results in a shorter time.
+        # In general, all of VM, NVM and energy budget should be checked.
         'EVOSEARCH_BYPASS_EFFICIENCY' : False,
 
         # **For testing only**: keep sampled initial population in a file for reuse.
-        # For testing different mutation and crossover strategies
+        # Useful for testing multiple mutation and crossover strategies
         'EVOSEARCH_INITIAL_POPULATION_FNAME': None,
         
         'EVOSEARCH_ENABLE_EVOMEMORY' : False, # use caching mechanism
 
         'FIXED_NUM_CPU_WORKERS': 16,
+        'FIXED_NUM_CPU_WORKERS_MUTATION': 16,
+        'FIXED_NUM_CPU_WORKERS_CROSSOVER': 16,
         
         'DEBUG_ENABLED' : False,
              
@@ -211,13 +224,16 @@ class Settings(object): ##default settintgs & discription
             # mutate_default: all blocks use the same probability
             # mutate_blockwise_prob: each block has its own mutation probability
             'MUTATION_OPERATOR': 'mutate_default',
-            
-            # For G2                        
+            # For G2
+            # Probablities: 0.05, 0.1, 0.2
+            # Make block 3 and 4 use the same probability
+            # Set N=1 for hyperparameter search
+            # itertools.product is useful
             # Default
             'MUT_PROB_PER_BLOCK': [0.05, 0.05, 0.05, 0.05],
             # For exploitation, later during evo search, same prob as default
             'MUT_PROB_PER_BLOCK_EXPLOITATION': [0.05, 0.05, 0.05, 0.05],
-            # For exploration, earlier during evo search, higher for first block (high IMO sensitivity)
+            # For exploration, earlier during evo search, higher for first block
             'MUT_PROB_PER_BLOCK_EXPLORATION': [0.2, 0.05, 0.05, 0.05],
             # After N generations, switching from exploration to exploitation
             'BEST_STABLE_GENERATIONS': 5,
@@ -228,14 +244,11 @@ class Settings(object): ##default settintgs & discription
     NAS_TESTING_SETTINGS = {
         'TRAINED_SUPERNET_FNAME': "",  # for independent testing
         # 'TRAINED_SUPERNET_SSOPT_LOGFNAME': "",        
-        # Fine-tuning uses evo search result at the specified generation.
+        # Fine-tuning uses evo search result at the specified generation. If this is None, Fine-tuning uses the last generation.
         'FINETUNE_BASE_GENERATION': None,
     }
     
-    # ----------------------------------------------------
-    # DATASET SPECIFIC SETTINGS 
-    # ----------------------------------------------------
-        
+    
     NAS_SETTINGS_PER_DATASET = {        
                     
         # NAS settings specific for datasets
@@ -243,11 +256,17 @@ class Settings(object): ##default settintgs & discription
             
             # model related
             'NUM_BLOCKS'  : 4,
-            'NUM_CLASSES' : 10,            
-            'STEM_C_OUT'  : 16, # important not to make stem too large
+            'NUM_CLASSES' : 10,
+            # original STEM_C_OUT = 32, but this incurs two issues:
+            # (1) makes the stem too costly: high latency and high NVM usage
+            # (2) affects IMC sensitivity: as the stem is fixed in terms of
+            #     net-level and block-level parameters, IMC sensitivity is
+            #     low for some parameters (ex: width multiplier), which
+            #     contradicts what MCUNet shows
+            'STEM_C_OUT'  : 16,
             'INPUT_CHANNELS' : 3,            
             'STRIDE_FIRST' : 2,
-            'DOWNSAMPLE_BLOCKS' : [0,1,2,3],
+            'DOWNSAMPLE_BLOCKS' : [0,1,2,3],  #[3,5], #[4, 6],        
             'OUT_CH_PER_BLK' : MOBILENET_V2_NUM_OUT_CHANNELS_CIFAR10,
             'FIRST_BLOCK_HARD_CODED': False,
             'USE_1D_CONV': False,
@@ -263,12 +282,14 @@ class Settings(object): ##default settintgs & discription
             'INPUT_RESOLUTION': INPUT_RESOLUTION_CIFAR10,
             
             # training related
-            'TRAIN_DATADIR' : CURRENT_HOME_PATH + '/TiNAS/NASBase/dataset/CIFAR10/',
-            'TRAIN_OPT_LR' : 0.025,  # learning rate (lower gives better stibility)            
+            'TRAIN_DATADIR' : CURRENT_HOME_PATH + '/TiNAS/NASBase/dataset/CIFAR10/', # str(Path.home()) + '/DL-sandpit2/TiNAS/NASBase/dataset/CIFAR10/',
+            'TRAIN_OPT_LR' : 0.025, # 0.1, #0.05,    # learning rate
+            # check MCUNet training parameters
             'TRAIN_SUPERNET_BATCHSIZE' :256,
             'TRAIN_SUBNET_BATCHSIZE' : 100,
-            'VAL_BATCHSIZE' : 500,            
-            'TRAIN_SUPERNET_EPOCHS' : 400,  # change depending on supernet size
+            'VAL_BATCHSIZE' : 500,
+            # Use lower supernet epochs, to have more variation
+            'TRAIN_SUPERNET_EPOCHS' : 400,  # try 400~500 for 70% accuracy
             'TRAIN_SUBNET_EPOCHS' : 20,
             'FINETUNE_SUBNET_EPOCHS' : 20,
             'FINETUNE_BATCHSIZE': 100,
@@ -279,7 +300,7 @@ class Settings(object): ##default settintgs & discription
         'HAR':{
             'NUM_BLOCKS'  : 3,
             'NUM_CLASSES' : 6,
-            'STEM_C_OUT'  : 10,  # important not to make stem too large
+            'STEM_C_OUT'  : 10,  # original = 32, but this makes the stem too costly
             'INPUT_CHANNELS' : 9,
             'STRIDE_FIRST' : 2,
             'DOWNSAMPLE_BLOCKS' : [0,1,2],
@@ -297,7 +318,7 @@ class Settings(object): ##default settintgs & discription
             'WIDTH_MULTIPLIER': WIDTH_MULTIPLIER_HAR,
             'INPUT_RESOLUTION': INPUT_RESOLUTION_HAR,
 
-            'TRAIN_OPT_LR' : 0.025,    # learning rate
+            'TRAIN_OPT_LR' : 0.05,    # learning rate
 
             # https://github.com/healthDataScience/deep-learning-HAR/blob/master/HAR-CNN.ipynb
             'TRAIN_SUPERNET_BATCHSIZE': 64,
@@ -307,42 +328,94 @@ class Settings(object): ##default settintgs & discription
             'TRAIN_SUPERNET_EPOCHS' : 200,
             'FINETUNE_SUBNET_EPOCHS' : 15,
             'FINETUNE_BATCHSIZE': 64,
-            'FINETUNE_OPT_LR' : 0.05,  # fine-tune learning rate
+            'FINETUNE_OPT_LR' : 0.025,  # fine-tune learning rate
         },
         
-        'KWS':{
-            'NUM_BLOCKS'  : 3,
-            'NUM_CLASSES' : 12,
-            'STEM_C_OUT'  : 10,  # important not to make stem too large
+        'MSWC':{
+            'NUM_BLOCKS'  : 4,
+            'NUM_CLASSES' : 300,
+            'STEM_C_OUT'  : 32,  # original = 32, but this makes the stem too costly
             'INPUT_CHANNELS' : 1,
             'STRIDE_FIRST' : 2,
-            'DOWNSAMPLE_BLOCKS' : [0,1,2],
-            'OUT_CH_PER_BLK' : MOBILENET_V2_NUM_OUT_CHANNELS_KWS,
+            'DOWNSAMPLE_BLOCKS' : [1,2,3],
+            'OUT_CH_PER_BLK' : MOBILENET_V2_NUM_OUT_CHANNELS_MSWC,
             'FIRST_BLOCK_HARD_CODED': False,
-            'USE_1D_CONV': True,
+            'USE_1D_CONV': False,
 
             # block-level parameters
-            'EXP_FACTORS': EXP_FACTORS_KWS,
-            'KERNEL_SIZES': KERNEL_SIZES_KWS,
-            'MOBILENET_NUM_LAYERS_EXPLICIT': MOBILENET_NUM_LAYERS_EXPLICIT_KWS,
-            'SUPPORT_SKIP': SUPPORT_SKIP_KWS,
+            'EXP_FACTORS': EXP_FACTORS_MSWC,
+            'KERNEL_SIZES': KERNEL_SIZES_MSWC,
+            'MOBILENET_NUM_LAYERS_EXPLICIT': MOBILENET_NUM_LAYERS_EXPLICIT_MSWC,
+            'SUPPORT_SKIP': SUPPORT_SKIP_MSWC,
 
             # net-level parameters
-            'WIDTH_MULTIPLIER': WIDTH_MULTIPLIER_KWS,
-            'INPUT_RESOLUTION': INPUT_RESOLUTION_KWS,
+            'WIDTH_MULTIPLIER': WIDTH_MULTIPLIER_MSWC,
+            'INPUT_RESOLUTION': INPUT_RESOLUTION_MSWC,
 
-            'TRAIN_OPT_LR' : 0.05,    # learning rate
+            'TRAIN_MULTI_GPU': True,
+
+            'TRAIN_OPT_LR' : 0.01,    # learning rate
             
-            'TRAIN_SUPERNET_BATCHSIZE': 64,
-            'TRAIN_SUBNET_BATCHSIZE': 64,
-            'VAL_BATCHSIZE': 64,
+            # https://ieeexplore.ieee.org/document/10241972 uses 1600
+            'TRAIN_SUBNET_BATCHSIZE': 100,
+            'VAL_BATCHSIZE': 400,  # Does not affect accuracy. Use as large value as possible without exceeding GPU memory
+            # Use gradient accumulation to get effective batch size 1600
+            'GRADIENT_ACCUMULATION_STEPS': 16,
 
-            'TRAIN_SUPERNET_EPOCHS' : 200,
-            'FINETUNE_SUBNET_EPOCHS' : 30,
+            'TRAIN_SUPERNET_EPOCHS' : 1000,
+            'FINETUNE_SUBNET_EPOCHS' : 25,
+            'FINETUNE_OPT_LR' : 0.01,  # fine-tune learning rate
+            'FINETUNE_BATCHSIZE': 100,
+
+            'BATCH_SKIP_RATIO': 0.6,
+
+            'PREPROCESSING_PARAMETERS': {
+                'NUM_WORKERS': 4,
+                'SUBSET': {
+                    # Use 50/50 most common words in English/Spanish
+                    # Similar way and smaller than https://ieeexplore.ieee.org/document/10241972
+                    'en': 50,
+                    'es': 50,
+                },
+                # MFCC parameters are from Harvard repo
+                # https://github.com/harvard-edge/multilingual_kws/blob/d7625b87ee525e9c302e12071e2458a0154c0469/multilingual_kws/embedding/input_data.py#L129
+                'WINDOW_MS': 30,
+                'STRIDE_MS': 20,
+                'N_MELS': 40,  # dct_coefficient_count in tensorflow
+                'N_MFCC': 40,
+                # (padding_left,padding_right, padding_top,padding_bottom)
+                # https://pytorch.org/docs/stable/generated/torch.nn.functional.pad.html
+                # Original size: 40x51
+                'PADDINGS': (0, 1, 6, 6),
+            },
         },
     
     }
     
+        
+        
+        
+        
+    #     'NUM_CLASS' : 10,
+    #     'EPOCH': 25,
+    #     'TRIALS': 100,
+    #     'TRAIN_BATCHSIZE' : 256, # batchsize of the child models
+    #     'EXPLORATION' : 0.1,  # high exploration for the first 1000 steps
+    #     'REGULARIZATION' : 1e-3,  # regularization strength
+    #     'CONTROLLER_CELLS' : 32,  # number of cells in RNN controller
+    #     'EMBEDDING_DIM' : 20,  # dimension of the embeddings for each state
+    #     'ACCURACY_BETA' : 0.8,  # beta value for the moving average of the accuracy
+    #     'CLIP_REWARDS' : 0.0,  # clip rewards in the [-0.05, 0.05] range
+    #     'RESTORE_CONTROLLER' : False,  # restore controller to continue training    
+    #     'IMG_CHANNEL' : 3, 
+    #     'IMG_SIZE' : 32,
+        
+    # }
+    
+    
+    # ----------------------------------------------------
+    # DATASET SPECIFIC SETTINGS 
+    # ----------------------------------------------------
     
     
 
@@ -358,7 +431,7 @@ class Settings(object): ##default settintgs & discription
     # DNN DUMPER SETTINGS
     # ----------------------------------------------------
     LOG_SETTINGS = {    
-        'TRAIN_LOG_DIR' : CURRENT_HOME_PATH + '/TiNAS/NASBase/train_log/', 
+        'TRAIN_LOG_DIR' : CURRENT_HOME_PATH + '/TiNAS/NASBase/train_log/', # str(Path.home()) + '/DL-sandpit2/TiNAS/NASBase/train_log/',
         'TRAIN_LOG_FNAME' : "train_info.csv", 
         'LOG_LEVEL' : 1, 
         'REMOTE_LOGGING_SYNC_DIR' : CURRENT_HOME_PATH + '/TiNAS/wandb_dir/'
@@ -412,6 +485,10 @@ def load_settings(fname):
 
 def _update_settings(default_settings, new_settings):
     for k, v in new_settings.items():
+        if k not in default_settings:
+            print(f'Warning: unknown key {k}')
+            continue
+
         # adds new items, overwrites existing items
         if isinstance(default_settings[k], dict):
             # Update nested dictionaries recursively
@@ -436,12 +513,28 @@ def apply_settings_json(test_settings, settings_json):
             new_settings = _update_settings(old_settings, settings_json[settings_category])
             setattr(test_settings, settings_category, new_settings)
 
+def parse_and_apply_saved_settings(global_settings, saved_settings, categories_to_update=None):
+    settings_category = None
+    cur_section = ''
+
+    for line in saved_settings.split('\n'):
+        line = line.strip()
+
+        if line.endswith(':='):
+            if settings_category:
+                if categories_to_update is None or settings_category in categories_to_update:
+                    old_settings = getattr(global_settings, settings_category)
+                    _update_settings(old_settings, ast.literal_eval(cur_section))
+                cur_section = ''
+            settings_category = line.split(':')[0]
+        else:
+            cur_section += line
 
 def arg_parser(test_settings):
     parser = argparse.ArgumentParser('Parser User Input Arguments')
     parser.add_argument('--gpuid',    type=str, default=argparse.SUPPRESS,  help="GPU selection")
     
-    parser.add_argument('--dataset',  type=str,  default=argparse.SUPPRESS,  help="supported dataset including : 1. CIFAR10 (default), 2. HAR")
+    parser.add_argument('--dataset',  type=str,  default=argparse.SUPPRESS,  help="supported dataset including : 1. CIFAR10 (default), 2. HAR. 3 MSWC")
     
     parser.add_argument('--ccap',    type=float, default=argparse.SUPPRESS,   help="capacitor size")
     parser.add_argument('--latreq',    type=float, default=argparse.SUPPRESS,   help="end-to-end latency requirement")

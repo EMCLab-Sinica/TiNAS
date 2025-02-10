@@ -117,7 +117,7 @@ class MNASSuperNet(nn.Module):
         self.name            = name
 
         settings_per_dataset = global_settings.NAS_SETTINGS_PER_DATASET[dataset]
-        if self.dataset in ("CIFAR10", "HAR", "KWS"):
+        if self.dataset in ("CIFAR10", "HAR", "MSWC"):
             self.num_blocks  = settings_per_dataset['NUM_BLOCKS']
             self.num_classes = settings_per_dataset['NUM_CLASSES']
             self.stem_c_out  = settings_per_dataset['STEM_C_OUT']

@@ -4,7 +4,7 @@ import os
 import random
 
 import torch
-from NASBase.utils import set_seed
+from NASBase.utils import set_seed, enable_debug
 
 def get_max_num_workers(worker_type):
     if worker_type == 'CPU':
@@ -20,6 +20,7 @@ def available_gpus():
     return list(map(int, os.environ['CUDA_VISIBLE_DEVICES'].split(',')))
 
 def worker_func_wrapper(worker_func, random_seed, *args, **kwargs):
+    enable_debug()
     set_seed(random_seed)
     return worker_func(*args, **kwargs)
 
@@ -61,10 +62,7 @@ def run_multiprocessing_workers(num_workers, worker_func, worker_type, common_ar
         for n in range(num_workers)
     ])
 
-    if worker_type == 'GPU' and 'CUDA_VISIBLE_DEVICES' in os.environ:
-        args_lists.append(available_gpus())
-    else:
-        args_lists.append(range(num_workers))
+    args_lists.append(range(num_workers))
 
     for one_common_arg in common_args:
         args_lists.append([one_common_arg] * num_workers)

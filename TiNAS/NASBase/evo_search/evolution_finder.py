@@ -6,6 +6,7 @@ import os.path
 import sys
 import itertools
 from pprint import pprint
+import multiprocessing
 
 from datetime import datetime  
 import time
@@ -193,6 +194,9 @@ class EvolutionFinder:
 		self.mutation_operator	= MutationOperator(global_settings, self.arch_manager, self.num_blocks)
 
 		self.initial_population_fname = global_settings.NAS_EVOSEARCH_SETTINGS['EVOSEARCH_INITIAL_POPULATION_FNAME']
+		if not self.initial_population_fname:
+			if not global_settings.NAS_SETTINGS_GENERAL['SEARCH_TIME_TESTING']:
+				self.initial_population_fname = self.global_settings.LOG_SETTINGS['TRAIN_LOG_DIR'] + self.exp_suffix + '_initial_population.json'
 
 	# def invite_reset_constraint_type(self):
 	# 	print('Invalid constraint type! Please input one of:', list(self.valid_constraint_range.keys()))
@@ -234,6 +238,7 @@ class EvolutionFinder:
 			if None in [cached_lat, cached_imc]:	# if any of them are none, then recalculate
 				efficiency, imc = self.efficiency_predictor.predict_efficiency_and_imc(sample, self.net_choices, input_ch)
 			else:
+				print(f'Cache hit for {str(sample)}')
 				efficiency = cached_lat
 				imc = cached_imc    
        
@@ -337,23 +342,24 @@ class EvolutionFinder:
 	# MULTIPROCESSING WORKERS
 	##################################################################
 	
-	def _mpworker_pop_efficiency(self, worker_id, batched_pop_size):
-		print("_mpworker_pop_efficiency::Enter [{}], num_jobs={}".format(worker_id, batched_pop_size))
+	def _mpworker_pop_efficiency(self, worker_id, population_size, q, processed_subnets):
+		print("_mpworker_pop_efficiency::Enter [{}]".format(worker_id))
 		child_pool = []
 		efficiency_pool = []
 		imc_pool = []
-		for pix in range(batched_pop_size):
-			sample, efficiency, imc = self.random_sample()			
-			if sample is None:
-				break
-			child_pool.append(sample); efficiency_pool.append(efficiency); imc_pool.append(imc)
+		while True:
+			sample, efficiency, imc = self.check_constraints(self.arch_manager.random_sample())
+			if sample is not None:
+				child_pool.append(sample); efficiency_pool.append(efficiency); imc_pool.append(imc)
+				q.put((sample, efficiency, imc))
+				with processed_subnets.get_lock():
+					processed_subnets.value += 1
 			#print("_mpworker_pop_efficiency::Enter [{}][{}/{}]".format(worker_id, pix+1, batched_pop_size))
-		result = {
-			"child_pool" : child_pool,
-			"efficiency_pool" : efficiency_pool,
-			"imc_pool": imc_pool,
-		}  
-		return result
+			with processed_subnets.get_lock():
+				processed_subnets_value = processed_subnets.value
+			print(f'Need {population_size} subnets, got {processed_subnets_value}')
+			if processed_subnets_value >= population_size:
+				break
 
 	def _mpworker_pop_accuracy(self, worker_id, batched_child_pool):
 		print("_mpworker_pop_accuracy::Enter [{}], num_jobs={}".format(worker_id, len(batched_child_pool)))
@@ -474,26 +480,28 @@ class EvolutionFinder:
 		efficiency_pool = []
 		imc_pool = []
 		if verbose:
-			print('Generate random population...')
+			print('[{}] Generate random population...'.format(datetime.now().strftime("%m/%d/%Y, %H:%M:%S")))
    
 		# ==== get latency ====
 		print("init population : latency")
 		if USE_MULTIPROCESSING:	# (### MULTIPROCESSING: CPU)
 			num_workers = self.global_settings.NAS_EVOSEARCH_SETTINGS['FIXED_NUM_CPU_WORKERS']
-			if (population_size % num_workers) > 0:
-				sys.exit("run_evolution_search::Error - init get latency - non divisible num workers: {},{}".format(num_workers, population_size))
-			batched_pop_size = int(np.ceil(population_size/num_workers))			
-			all_worker_results = mp_helper.run_multiprocessing_workers(
-				num_workers=num_workers,
-				worker_func= self._mpworker_pop_efficiency,
-				worker_type='CPU',
-				common_args=(batched_pop_size,), worker_args=(),
-			)			
-			# combine results
-			for worker_result in all_worker_results:
-				child_pool.extend(worker_result['child_pool'])
-				efficiency_pool.extend(worker_result['efficiency_pool'])
-				imc_pool.extend(worker_result['imc_pool'])
+
+			mp = multiprocessing.get_context('spawn')
+			processed_subnets = mp.Value('i', 0)
+			q = mp.SimpleQueue()
+			ctx = torch.multiprocessing.spawn(self._mpworker_pop_efficiency,
+				args=(population_size, q, processed_subnets),
+				nprocs=num_workers,
+				join=False)
+			while len(child_pool) < population_size:
+				sample, efficiency, imc = q.get()
+				child_pool.append(sample)
+				efficiency_pool.append(efficiency)
+				imc_pool.append(imc)
+			# Loop on join until it returns True or raises an exception.
+			while not ctx.join():
+				pass
 		else:  
 			for pix in range(population_size):
 				sample, efficiency, imc = self.random_sample()			
@@ -542,6 +550,9 @@ class EvolutionFinder:
 												[lat, imc, acc]
                                           		)
 
+		if verbose:
+			print('[{}] Generate random population done'.format(datetime.now().strftime("%m/%d/%Y, %H:%M:%S")))
+
 		return population
 
 	
@@ -563,10 +574,13 @@ class EvolutionFinder:
 		best_info = None
 		population = []  # (validation, sample, latency, imc) tuples
 
+		# TODO: load initial population from dump_pop
 		if self.initial_population_fname and os.path.exists(self.initial_population_fname):
 			initial_population = file_utils.json_load(self.initial_population_fname)
 			population = copy.deepcopy(initial_population)
 			print ("===> Initial population loaded from - ", self.initial_population_fname)
+		else:
+			print ("===> Initial population file %s not found, generating a new one" % (self.initial_population_fname,))
 
 		if not population:
 			population = self.init_population(verbose)
@@ -621,7 +635,7 @@ class EvolutionFinder:
    			# mutate a fixed number of random candidates (### MULTIPROCESSING: CPU)
 			# populate children list using mutated candidates from current population
 			if USE_MULTIPROCESSING:	# (### MULTIPROCESSING: CPU)
-				num_workers = self.global_settings.NAS_EVOSEARCH_SETTINGS['FIXED_NUM_CPU_WORKERS']
+				num_workers = self.global_settings.NAS_EVOSEARCH_SETTINGS['FIXED_NUM_CPU_WORKERS_MUTATION']
 				if (mutation_numbers % num_workers) > 0:
 					sys.exit("run_evolution_search::Error - mutation - non divisible num workers: {},{}".format(num_workers, mutation_numbers))
 				else:
@@ -659,7 +673,7 @@ class EvolutionFinder:
 			# ---------- crossover a fixed number of random candidates	(### MULTIPROCESSING: CPU)
 			crossover_numbers = population_size - mutation_numbers
 			if USE_MULTIPROCESSING:	# (### MULTIPROCESSING: CPU)
-				num_workers = self.global_settings.NAS_EVOSEARCH_SETTINGS['FIXED_NUM_CPU_WORKERS']
+				num_workers = self.global_settings.NAS_EVOSEARCH_SETTINGS['FIXED_NUM_CPU_WORKERS_CROSSOVER']
 				if (crossover_numbers % num_workers) > 0:
 					sys.exit("run_evolution_search::Error - crossover - non divisible num workers: {},{}".format(num_workers, crossover_numbers))
 				else:

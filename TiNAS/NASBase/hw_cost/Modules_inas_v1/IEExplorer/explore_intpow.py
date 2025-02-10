@@ -121,6 +121,7 @@ def get_energy_all_params_intpow(layer, plat_settings, plat_cost_profile):
 
 
 def explore_full_param_sweep_intpow(layer, plat_settings, plat_cost_profile, report_topN=0.5, best_selection='first'):
+    #print("explore_full_param_sweep_intpow:: Enter")
     
     R = layer['OFM'].h; C = layer['OFM'].w; M = layer['OFM'].ch; N = layer['IFM'].ch
     H = layer['IFM'].h; W = layer['IFM'].w
@@ -134,6 +135,7 @@ def explore_full_param_sweep_intpow(layer, plat_settings, plat_cost_profile, rep
     #print(layer['alias'])
     #pprint(layer)
     #pprint(tr_lst); pprint(tc_lst); pprint(tm_lst); pprint(tn_lst)
+    #print(len(tr_lst) * len(tc_lst) * len(tm_lst) * len(tn_lst))
     #print(layer['alias'], layer['lcnt'], len(tr_lst), len(tc_lst), len(tm_lst), len(tn_lst))
     #sys.exit()
 

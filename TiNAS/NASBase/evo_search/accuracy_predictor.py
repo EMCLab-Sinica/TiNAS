@@ -1,11 +1,3 @@
-'''
-Predict subnet accuracy, using either:
-- pre-trained supernet [DEFAULT]
-- pre-constructed look-up-table [NOT IMPLEMENTED]
-- estimation DNN model [NOT IMPLEMENTED]
-'''
-
-
 import os, sys
 import torch.nn as nn
 import torch
@@ -110,6 +102,8 @@ class AccuracyPredictor:
         with torch.no_grad(): # inference only
             for step, (inputs, targets) in enumerate(val_loader):
                 inputs, targets = inputs.to(device), targets.to(device)
+                if step == 0:
+                    print(f'Input shape: {inputs.shape}')
                 outputs = model(inputs, subnet_choice_per_block)
                 loss = criterion(outputs, targets)
                 prec1, prec5 = utils.accuracy(outputs, targets, topk=(1, 5))

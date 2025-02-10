@@ -1,6 +1,6 @@
 {
     "GLOBAL_SETTINGS": {
-        "EXP_SUFFIX": "TiNAS-U"
+        "EXP_SUFFIX": "TiNAS-G2-only"
     },
     "PLATFORM_SETTINGS": {
         "IMC_CONSTRAINT": 0
@@ -10,7 +10,11 @@
         "SSOPT_CONSTRAINTS": "CHK_PASS_STORAGE,CHK_PASS_SPATIAL,CHK_PASS_ATOMICITY,CHK_PASS_RESPONSIVENESS"
     },
     "NAS_EVOSEARCH_SETTINGS": {
-        "EVOSEARCH_SCORE_TYPE": "ACC_LREQ"
+        "EVOSEARCH_SCORE_TYPE": "ACC_IMO_LREQ"
+    },
+    "TINAS": {
+        "STAGE2_SETTINGS": {
+            "MUTATION_OPERATOR": "mutate_adaptive"
+        }
     }
 }
-

@@ -73,6 +73,9 @@ def flops_worker(cpuid, global_settings: Settings, width_multiplier, input_resol
         else:
             print("[CPU-{}] ERROR processing subnet: {}, flops: under CONTpow={}".format(cpuid, subnet_name, network_flops_contpow))
         
+        # The last item in per-layer nvm usage is for summary
+        max_features_req, total_weights_req = subnet_latency_info['nvm_usage'][-1]
+
         subnet_results.append({
             "subnet_name": subnet_name,
             "subnet_obj" : netobj_to_pyobj(subnet_obj),
@@ -90,6 +93,7 @@ def flops_worker(cpuid, global_settings: Settings, width_multiplier, input_resol
             "imc_prop": subnet_latency_info['imc_prop'],
             "perf_e2e_intpow_lat": subnet_latency_info['perf_e2e_intpow_lat'],
             "ip_tot_npc": subnet_latency_info['ip_tot_npc'],
+            "total_nvm_usage": max_features_req + total_weights_req,
         })
 
     return subnet_results, constraint_stats
@@ -230,6 +234,7 @@ def ss_optimization_by_flops(global_settings, dataset, supernet_choices, superne
         'num_subnets': len(cur_subnets_with_flops),
         'supernet_objtype': supernet.SUPERNET_OBJTYPE,
         'per_supernet_stats': per_supernet_stats,
+        'all_subnet_results': all_subnet_results,
     }
 
     return supernet_choice, supernet_properties

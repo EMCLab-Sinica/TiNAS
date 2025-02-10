@@ -5,8 +5,10 @@ Stage 2: Evo search
 
 import sys
 import os.path
+import datetime
 
 from .train_supernet import run_supernet_train
+from .train_supernet_distributed import run_supernet_train_distributed
 
 from settings import Settings, SSOptPolicy, Stages, arg_parser
 from NASBase import file_utils, utils
@@ -32,6 +34,13 @@ def stage_ss_optimization(global_settings: Settings, dataset, supernet_name, sta
         supernet_block_choices,     # Level 2 search space
     )
 
+    # Filter large objects to avoid huge JSON logs
+    filtered_all_subnet_results = []
+    for subnet_result in supernet_properties['all_subnet_results']:
+        filtered_all_subnet_results.append({
+            key: value for key, value in subnet_result.items() if key not in ('perf_e2e_contpow_flops_per_layer', 'subnet_obj',)
+        })
+
     stage_ss_opt_results = {
         'best_supernet_config': best_supernet_config,
         'best_supernet_blk_choices': None,  # The default will be used if this is None
@@ -48,6 +57,7 @@ def stage_ss_optimization(global_settings: Settings, dataset, supernet_name, sta
                                                                     supernet_properties['supernet_objtype']
                                                                     ),
         'per_supernet_stats': supernet_properties['per_supernet_stats'],
+        'all_subnet_results': filtered_all_subnet_results,
     }
 
     if global_settings.NAS_SSOPTIMIZER_SETTINGS['SSOPT_POLICY'] == SSOptPolicy.FLOPS:
@@ -61,7 +71,7 @@ def stage_ss_optimization(global_settings: Settings, dataset, supernet_name, sta
     file_utils.json_dump(stage_ss_opt_logfname, stage_ss_opt_results)
 
 def create_supernet(global_settings: Settings, dataset, stage_ss_opt_logfname,
-                    load_state=False):
+                    load_state=False, merge_settings_categories_from_state=None):
     print("create_supernet::Enter")
     
     # if trained supernet is provided, then open that file. corresponding supernet config also should be provided
@@ -104,7 +114,7 @@ def create_supernet(global_settings: Settings, dataset, stage_ss_opt_logfname,
     supernet = get_supernet(global_settings, dataset,
                             load_state=load_state, supernet_train_chkpnt_fname=supernet_train_chkpnt_fname,
                             width_multiplier=width_multiplier, input_resolution=input_resolution,
-                            blk_choices=blk_choices)
+                            blk_choices=blk_choices, merge_settings_categories_from_state=merge_settings_categories_from_state)
 
     return supernet, supernet_train_chkpnt_fname, original_supernet_train_chkpnt_fname
 
@@ -114,7 +124,10 @@ def stage_train_supernet(global_settings: Settings, dataset, supernet_name, supe
     print("-- stage_train_supernet::Enter")
 
     # --- train supernet (one-shot) ---
-    supernet_best_ckpt, best_val_acc, best_val_loss = run_supernet_train(global_settings, dataset, supernet_chkpt_fname=supernet_train_chkpnt_fname, supernet=supernet)
+    if not global_settings.NAS_SETTINGS_PER_DATASET[dataset].get('TRAIN_MULTI_GPU', False):
+        supernet_best_ckpt, best_val_acc, best_val_loss = run_supernet_train(global_settings, dataset, supernet_chkpt_fname=supernet_train_chkpnt_fname, supernet=supernet)
+    else:
+        supernet_best_ckpt, best_val_acc, best_val_loss = run_supernet_train_distributed(global_settings, dataset, supernet_chkpt_fname=supernet_train_chkpnt_fname, supernet=supernet)
 
     stage_train_supernet_results = {
         'supernet_best_ckpt': supernet_best_ckpt,
@@ -129,8 +142,10 @@ def stage_train_supernet(global_settings: Settings, dataset, supernet_name, supe
 
     # save stage TRAIN_SUPERNET results to JSON
     # overwrite json
-    file_utils.delete_file(stage_train_supernet_logfname)
-    file_utils.json_dump(stage_train_supernet_logfname, stage_train_supernet_results)
+
+    stage_train_supernet_logfname_with_timestamp = stage_train_supernet_logfname.replace('.json', str(datetime.datetime.now().strftime('-%Y%m%d-%H%M%S')) + '.json')
+    file_utils.delete_file(stage_train_supernet_logfname_with_timestamp)
+    file_utils.json_dump(stage_train_supernet_logfname_with_timestamp, stage_train_supernet_results)
 
 
 def stage_evo_search(global_settings, dataset, best_supernet, stage_evo_search_logfname):
@@ -235,7 +250,9 @@ def run_nas(global_settings: Settings):
     # -- STAGE 3: Search Supernet (evolutionary search)
     if Stages.EVO_SEARCH in stages:
         best_supernet, supernet_train_chkpnt_fname, _ = create_supernet(global_settings, dataset, stage_ss_opt_logfname, 
-                                                                    load_state=True)        
+                                                                    load_state=True,
+                                                                    # NAS_EVOSEARCH_SETTINGS settings for the model structure, and TINAS includes parameters to drop
+                                                                    merge_settings_categories_from_state=['TINAS', 'NAS_SETTINGS_PER_DATASET'])
         stage_evo_search(global_settings, dataset, best_supernet, stage_evo_search_logfname)            
         stages_completed.append(Stages.EVO_SEARCH)
 
@@ -248,6 +265,7 @@ def run_nas(global_settings: Settings):
         stages_completed.append(Stages.FINE_TUNE)
 
 def main():
+    utils.enable_debug()
     test_settings = Settings() # default settings
     test_settings = arg_parser(test_settings)
     run_nas(test_settings)

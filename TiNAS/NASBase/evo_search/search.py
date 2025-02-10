@@ -1,4 +1,5 @@
-""" Contains hyper-parameters for the evolutionary search process    
+""" Hyper-parameters for the evolutionary search process
+    You can modify these hyper-parameters to see how they influence the final ImageNet accuracy of the search sub-net.
 """
 import os, sys
 import torch
@@ -11,6 +12,7 @@ from pprint import pprint
 
 from .evolution_finder import EvolutionFinder
 from .accuracy_predictor import AccuracyPredictor
+#from .flops_table import FLOPsTable
 from .latency_estimator import LatencyEstimator
 
 
@@ -23,7 +25,7 @@ from NASBase.model.common_utils import get_supernet
 from settings import Settings, arg_parser, load_settings
 
 
-
+ACCURACY_TABLE_FNAME = "./NASBase/train_log/load_supernet_combined_results.json"
 
 
 

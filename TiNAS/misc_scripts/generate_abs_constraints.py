@@ -1,5 +1,6 @@
 import itertools
 import pathlib
+import pprint
 import sys
 
 TOPDIR = pathlib.Path(__file__).resolve().parents[1]
@@ -7,7 +8,7 @@ TOPDIR = pathlib.Path(__file__).resolve().parents[1]
 import numpy as np
 
 sys.path.append(str(TOPDIR))
-from NASBase.file_utils import pickle_load, json_dump
+from NASBase.file_utils import pickle_load, json_dump, json_load
 from settings import Settings
 
 SEED = 1234
@@ -21,7 +22,8 @@ LOAD_SUPERNET_PREPROCESSED_FILES = {
     'HAR': {
         0.005: 'load_supernet_NVM1MB_HAR_5mF_allblvlparams_03152024/result_load_supernet_NVM1MB_HAR_5mF_allblvlparams_03152024.pkl'
     },
-    'KWS': {
+    'MSWC': {
+        0.005: 'load_supernet_KWS_2D_52_48_stem32_4MBNVM_01122025/result_load_supernet_KWS_2D_52_48_stem32_4MBNVM_01122025.pkl'
     }
 }
 
@@ -30,6 +32,7 @@ TS_PERC_RANGES = [25, 75]   # 25%, 75% of the feasible solutions
 IMO_PERC_RANGES = {
     'CIFAR10': [2],
     'HAR': [46, 4],  # IMO 46% for LAT 25%; IMO 4% for LAT 75%
+    'MSWC': [20, 4],  # IMO 20% for LAT 25%; IMO 4% for LAT 75%
 }
 
 def threshold_selection(global_settings: Settings, dataset, ccap):
@@ -80,12 +83,50 @@ def threshold_selection_all(global_settings: Settings):
 
     json_dump(TOPDIR / 'settings' / 'all-thresholds.json', all_thresholds)
 
+def simulate_thresholds(dataset, ssopt_results_filenames):
+    all_ssopt_results = [json_load(ssopt_results_filename) for ssopt_results_filename in ssopt_results_filenames]
+    all_thresholds = json_load(str(TOPDIR / 'settings' / 'all-thresholds.json'))
+
+    ccap = list(LOAD_SUPERNET_PREPROCESSED_FILES[dataset].keys())[0]
+    imo_thresholds = all_thresholds[f'{dataset}-ccap{ccap}']['IMO_THRESHOLDS']
+
+    assert len(all_ssopt_results) == len(imo_thresholds)
+
+    all_supernet_stats = []
+    for ssopt_results, imo_threshold in zip(all_ssopt_results, imo_thresholds):
+        per_supernet_stats = {}
+        for subnet_result in ssopt_results['all_subnet_results']:
+            supernet_choice = tuple(subnet_result['supernet_choice'])
+
+            if supernet_choice not in per_supernet_stats:
+                per_supernet_stats[supernet_choice] = {
+                    'num_subnets': 0,
+                    'average_flops': 0,
+                }
+
+            if subnet_result['imc_prop'] <= imo_threshold:
+                per_supernet_stats[supernet_choice]['num_subnets'] += 1
+                per_supernet_stats[supernet_choice]['average_flops'] += subnet_result['perf_e2e_contpow_flops']
+
+        for supernet_choice in per_supernet_stats.keys():
+            num_subnets = per_supernet_stats[supernet_choice]['num_subnets']
+            if num_subnets:
+                per_supernet_stats[supernet_choice]['average_flops'] /= num_subnets
+
+        pprint.pprint(per_supernet_stats)
+        all_supernet_stats.append(per_supernet_stats)
+
+    return all_supernet_stats
+
 def main():
     np.random.seed(SEED) # set random seed
 
     global_settings = Settings() # default settings
 
     threshold_selection_all(global_settings)
+
+    if len(sys.argv) > 1:
+        simulate_thresholds('MSWC', sys.argv[1:])
 
 if __name__ == '__main__':
     main()

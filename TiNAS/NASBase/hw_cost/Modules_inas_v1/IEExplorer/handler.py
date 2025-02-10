@@ -232,6 +232,7 @@ def find_best_solution(network, plat_settings, plat_cost_profile, power_type='IN
                 'pass_topN' : pass_topN,
                 'fail_c0_topN': fail_solutions_c0,
                 'fail_c1_topN': fail_solutions_c1,
+                'fail_c2': [res_cons_c2[2]],
                 'error_code' : None,
             }
     

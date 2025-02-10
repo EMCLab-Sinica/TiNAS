@@ -1,5 +1,8 @@
 '''
-Randomly sample subnets from supernets
+Adapted from : https://github.com/ShunLu91/Single-Path-One-Shot-NAS
+
+Load supernet report accuracy for each subnet
+
 '''
 import socket
 import argparse
@@ -43,7 +46,7 @@ from NASBase.train_supernet import get_dataset
 
 from NASBase.model.common_utils import (
     blkchoices_ixs_to_blkchoices, blkchoices_to_blkchoices_ixs, get_network_dimension, get_network_obj, get_subnet, get_supernet, iter_blk_choices, netobj_to_pyobj, 
-    get_sampled_subnet_configs, get_subnet_from_config,
+    get_sampled_subnet_configs, get_subnet_from_config, get_sampled_subnet_configs_v2,
     get_dummy_net_input_tensor, netobj_to_pyobj
 )
 
@@ -57,9 +60,10 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO,
                     format=log_format, datefmt='%m/%d %I:%M:%S %p')
 
 
-SUPERNET_TRAIN_CHKPNT_FNAME = "<TO_ADD>" # e.g., TiNAS-M-threshold-0.1_supernet_mnas_best.pth
-BATCHED_SUBNET_RESULTS_FNAME_PREFIX = "<TO_ADD>" # e.g., load_supernet_batched_subnet_results_
-COMBINED_SUBNET_RESULTS_FNAME = "<TO_ADD>" #e.g., "load_supernet_combined_results_"
+SUPERNET_TRAIN_CHKPNT_FNAME = "MCUNet-F-threshold-0.1_supernet_mnas_best.pth" #"test_mnas_oneshot_train_best.pth"
+BATCHED_SUBNET_RESULTS_FNAME_PREFIX = "load_supernet_batched_subnet_results_"
+COMBINED_SUBNET_RESULTS_FNAME = "load_supernet_combined_results_"
+
 
 GET_SUBNET_ACCURACY = False
 GET_SUBNET_LATENCY = True
@@ -68,10 +72,10 @@ GET_SUBNET_LATENCY = True
 #DATASET = 'CIFAR10'
 
 AVAILABLE_GPUIDS = [0,1,2,3]
-NUM_CPU_CORES = 32
+NUM_CPU_CORES = 40
 # AVAILABLE_CPUIDS = np.arange(NUM_CPU_CORES)
 
-NUM_SUBNET_SAMPLES = 1000
+NUM_SUBNET_SAMPLES = 600
 NUM_SUBNET_SAMPLED_SUBBATCHSZ = 250
 ENABLE_NVM_CONSTRAINT = True
 OVERRIDE_NVM_SIZE = None
@@ -79,7 +83,7 @@ OVERRIDE_NVM_SIZE = None
 WIDTH_MULTIPLIER = 0.4
 INPUT_RESOLUTION = 32
 
-LOG_SUBDIR = "supernet_randsample/"
+LOG_SUBDIR = "load_supernet/"
 
 ###########################################
 # EXT SETTINGS CLASSES
@@ -101,11 +105,11 @@ class SettingsCONTpow(Settings):
 def _get_remote_logger_init_params(exp_type, server, global_settings, exp_consts, run_name_suffix="", group_name_suffix=""):
     
     init_params = {
-        "rlog_proj_name" : "supernet_randsample",
+        "rlog_proj_name" : "load_supernet",
         "rlog_run_name" : exp_type+run_name_suffix,
         "rlog_run_group" : exp_type+group_name_suffix,
         "rlog_run_config" : {            
-                "script_name" : "supernet_randsample.py",
+                "script_name" : "load_supernet.py",
                 "server"   : server,         
                 "exp_start" : datetime.now().strftime("%m/%d/%Y, %H:%M:%S"),
                 "settings_obj" : global_settings.get_dict(),
@@ -209,7 +213,7 @@ def remove_duplicates(subnet_batch_ixs, supernet_blk_choices):
 
 
 
-# -- untested ---
+
 def mpworker_subnets_accuracy(worker_id, global_settings, supernet_ckpt_fname, supernet_blk_choices, width_multiplier, input_resolution, subnet_batch):
     
     # --- common initialize
@@ -328,28 +332,34 @@ def mpworker_subnets_efficiency(worker_id, platform_settings, exp_suffix, datase
         
         # -- get flops
         subnet_flops, _ , flops_error = performance_model_intpow.get_network_flops(subnet_obj, fixed_params=None, layer_based_cals=True)
+        # -- get nvm usage
+        _, subnet_nvm_usage, nvm_error = performance_model_intpow.get_nvm_usage(subnet_obj)
+        #print(subnet_nvm_usage); sys.exit()
+        
         if (subnet_latency_info != None):
             subnet_latency_info['flops'] = np.sum(subnet_flops)
+            subnet_latency_info['nvm'] = np.sum(subnet_nvm_usage[-1])
         
         #pprint(subnet_result)
         
         #if (subnet_latency_info['error_codes'] == [False, None, None]):        
         batched_results.append(subnet_latency_info)    
         
-        print("_mpworker_pop_efficiency:: [wid={}] <{},{}> processing batched subnets, progress={}/{}, ipow_lat={}, imc={}".format(worker_id, 
+        print("_mpworker_pop_efficiency:: [wid={}] <{},{}> processing batched subnets, progress={}/{}, ipow_lat={}, imc={}, NVM={}".format(worker_id, 
                                                                                                             width_multiplier, input_resolution,
                                                                                                             six+1, len(subnet_batch), 
                                                                                                             batched_results[-1]['perf_e2e_intpow_lat'],
-                                                                                                            np.round(batched_results[-1]['imc_prop'], 2)
+                                                                                                            np.round(batched_results[-1]['imc_prop'], 2),
+                                                                                                            np.sum(subnet_latency_info['nvm'])
                                                                                                             ))
         rlog.log({"wid" : worker_id,
                     "wm_ir" : "<{}_{}>".format(width_multiplier, input_resolution), 
                     "progress" : round(((six+1)/len(subnet_batch))*100,2),                    
                     "sn_cpb" : sn_cpb,
                     "flops" : subnet_latency_info['flops'],
+                    "nvm" : subnet_latency_info['nvm'],
                     "ipow_lat" : batched_results[-1]['perf_e2e_intpow_lat'],                    
-                    "imc" : np.round(batched_results[-1]['imc_prop'], 2)
-                    
+                    "imc" : np.round(batched_results[-1]['imc_prop'], 2)                    
                 })
             
              
@@ -372,18 +382,27 @@ def run_multiple_supernets_latency(global_settings: Settings):
         
     exp_suffix = global_settings.GLOBAL_SETTINGS['EXP_SUFFIX']
     date_str = datetime.today().strftime('%m%d%Y')
-    train_log_subdir = LOG_SUBDIR+"load_supernet_NVM1MB_{}_{}/".format(exp_suffix, date_str)
+    train_log_subdir = LOG_SUBDIR+"load_supernet_{}_{}/".format(exp_suffix, date_str)
 
     file_utils.dir_create(global_settings.LOG_SETTINGS['TRAIN_LOG_DIR'] + train_log_subdir)
+    
+    # dump settings before proceeding
+    settings_logfname = global_settings.LOG_SETTINGS['TRAIN_LOG_DIR'] + train_log_subdir + "settings_" + dataset + "_" + exp_suffix + ".txt"    
+    file_utils.delete_file(settings_logfname)   
+    file_utils.write_file(settings_logfname, str(global_settings))
+        
     
     supernet_blk_choices = iter_blk_choices(settings_per_dataset['EXP_FACTORS'], 
                                             settings_per_dataset['KERNEL_SIZES'], 
                                             settings_per_dataset['MOBILENET_NUM_LAYERS_EXPLICIT'], 
                                             settings_per_dataset['SUPPORT_SKIP'])
     #print(len(supernet_blk_choices)); sys.exit()
+    #num_blocks = global_settings.NAS_SETTINGS_PER_DATASET[dataset]['NUM_BLOCKS']    
+    #choices_per_block = [list(x) for x in itertools.product(supernet_blk_choices, repeat=num_blocks)]        
+    #print(" -- finished getting choices_per_block, len = {}".format(len(choices_per_block)))
     
     platform_settings = global_settings.PLATFORM_SETTINGS   
-     
+    
     
     for each_wm in net_search_options['WIDTH_MULTIPLIER']:
         for each_ir in net_search_options['INPUT_RESOLUTION']:            
@@ -393,7 +412,16 @@ def run_multiple_supernets_latency(global_settings: Settings):
             resampling=0
             while (len(sampled_subnet_configs_ixs)<NUM_SUBNET_SAMPLES):
                         
-                tmp_sampled_subnet_configs = get_sampled_subnet_configs(global_settings, dataset, supernet_blk_choices, n_rnd_samples=NUM_SUBNET_SAMPLED_SUBBATCHSZ)
+                # tmp_sampled_subnet_configs = get_sampled_subnet_configs(global_settings, dataset, supernet_blk_choices, 
+                #                                                         custom_choices_per_block = choices_per_block,
+                #                                                         n_rnd_samples=NUM_SUBNET_SAMPLED_SUBBATCHSZ)
+                
+                tmp_sampled_subnet_configs = get_sampled_subnet_configs_v2(global_settings, dataset, supernet_blk_choices,                                                                          
+                                                                         n_rnd_samples=NUM_SUBNET_SAMPLED_SUBBATCHSZ)
+                # pprint(tmp_sampled_subnet_configs)
+                # print(len(tmp_sampled_subnet_configs))
+                # sys.exit()
+                
                 tmp_sampled_subnet_configs_ixs = [blkchoices_to_blkchoices_ixs(supernet_blk_choices, s)  for s in tmp_sampled_subnet_configs]        
                 
                 if ENABLE_NVM_CONSTRAINT == True:
@@ -542,6 +570,11 @@ if __name__ == '__main__':
     #run(test_settings)
     
     test_settings = _update_rehm(test_settings)
+    
+    # -- temporarily update block-level params (for HAR) --
+    #test_settings.NAS_SETTINGS_PER_DATASET['HAR']['EXP_FACTORS'] = [1, 3, 4, 6]
+    #test_settings.NAS_SETTINGS_PER_DATASET['HAR']['KERNEL_SIZES'] = [1, 3, 5, 7]
+    
         
     run_multiple_supernets_latency(test_settings)
     

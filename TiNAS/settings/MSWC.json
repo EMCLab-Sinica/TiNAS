@@ -1,0 +1,38 @@
+{
+    "PLATFORM_SETTINGS": {
+        "NVM_CAPACITY": 4000000,
+        "NVM_CAPACITY_ALLOCATION": [4000000, 4000000]
+    },
+    "NAS_SETTINGS_GENERAL": {
+        "DATASET": "MSWC"
+    },
+    "NAS_SSOPTIMIZER_SETTINGS": {
+        "SUBNET_SAMPLE_SIZE" : 200
+    },
+    "NAS_EVOSEARCH_SETTINGS": {
+        "POP_SIZE": 8,
+        "GENERATIONS": 35,
+        "FIXED_NUM_CPU_WORKERS": 16,
+        "FIXED_NUM_CPU_WORKERS_MUTATION": 4,
+        "FIXED_NUM_CPU_WORKERS_CROSSOVER": 4,
+        "MUT_PROB": 0.15
+    },
+    "TINAS": {
+        "STAGE1_SETTINGS": {
+            "DROPPING_BLOCK_LEVEL": {
+                "MOBILENET_NUM_LAYERS_EXPLICIT": [1],
+                "SUPPORT_SKIP": [false]
+            },
+            "DROPPING_NET_LEVEL": {
+                "WIDTH_MULTIPLIER": [0.2, 0.3, 0.4, 0.5, 0.6, 0.7],
+                "INPUT_RESOLUTION": []
+            }
+        },
+        "STAGE2_SETTINGS": {
+            "MUT_PROB_PER_BLOCK": [0.15, 0.15, 0.15, 0.15],
+            "MUT_PROB_PER_BLOCK_EXPLOITATION": [0.15, 0.15, 0.15, 0.15],
+            "MUT_PROB_PER_BLOCK_EXPLORATION": [0.5, 0.15, 0.15, 0.15],
+            "BEST_STABLE_GENERATIONS": 5
+        }
+    }
+}

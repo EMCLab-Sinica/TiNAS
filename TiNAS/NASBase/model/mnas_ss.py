@@ -74,18 +74,24 @@ MOBILENET_V2_NUM_OUT_CHANNELS_HAR = [8, 12, 16, 32, 48, 80, 160] # num out chann
 NUM_BLOCKS_HAR = [2, 3] # 3 by default
 
 # ==========================================================================================================================
-# ====================================== KWS [@TODO: not yet implemented] ==================================================
+# ====================================== MSWC ==============================================================================
 # ==========================================================================================================================
 
-EXP_FACTORS_KWS = [1, 3] # mobile-ib-conv-2/2, mobile-ib-conv-3/3, mobile-ib-conv-6/4
-KERNEL_SIZES_KWS = [1, 3]
-SUPPORT_SKIP_KWS = [False, True]  # support skip in block
-STRIDE_FIRST_KWS = [1, 2] # stride for the first layer of each block (determines reduction)
-MOBILENET_NUM_LAYERS_EXPLICIT_KWS = [1, 2] # also called "repeat" in mbnet_v2 paper
+EXP_FACTORS_MSWC = [1, 3, 6, 8] # mobile-ib-conv-2/2, mobile-ib-conv-3/3, mobile-ib-conv-6/4
+KERNEL_SIZES_MSWC = [1, 3, 5, 7]
+SUPPORT_SKIP_MSWC = [False, True]  # support skip in block
+STRIDE_FIRST_MSWC = [1, 2] # stride for the first layer of each block (determines reduction)
+MOBILENET_NUM_LAYERS_EXPLICIT_MSWC = [1, 2, 3, 4] # also called "repeat" in mbnet_v2 paper
 
-WIDTH_MULTIPLIER_KWS = [0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-INPUT_RESOLUTION_KWS = [125, 250] 
+INPUT_RESOLUTION_MSWC = [48, 52]
+WIDTH_MULTIPLIER_MSWC = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+INPUT_RESOLUTION_MSWC = [48, 52]
 
-MOBILENET_V2_NUM_OUT_CHANNELS_KWS = [4, 8, 16, 32, 64, 128, 256] # num out channels per block <-- hardcoded, not part of SS, half of CIFAR's channels
+#WIDTH_MULTIPLIER_MSWC = [1.0, 0.5, 0.2]
+#INPUT_RESOLUTION_MSWC = [36, 25]
 
-NUM_BLOCKS_KWS = [2, 3] # 3 by default
+#MOBILENET_V2_NUM_OUT_CHANNELS_MSWC = [4, 8, 16, 32, 64, 128, 256] # num out channels per block <-- hardcoded, not part of SS, half of CIFAR's channels
+MOBILENET_V2_NUM_OUT_CHANNELS_MSWC = [24, 24, 32, 64, 96, 160, 320] # num out channels per block <-- hardcoded, not part of SS, half of CIFAR's channels
+#MOBILENET_V2_NUM_OUT_CHANNELS_MSWC = [16, 32, 64, 78, 96, 160, 320] # num out channels per block <-- hardcoded, not part of SS, half of CIFAR's channels
+
+NUM_BLOCKS_MSWC = [3, 4, 5] # 4 by default

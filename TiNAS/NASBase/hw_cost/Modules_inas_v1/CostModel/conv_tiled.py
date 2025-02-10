@@ -64,9 +64,9 @@ def _num_datatrcmds_backup_tile_data(layer, params_exec, dma_type='1D'):
 
 def est_cost_CONV_contpow(layer, params_exec, plat_settings, plat_cost_profile):  
     #E_rb, L_rb = est_cost_CONV_reboot_contpow(plat_cost_profile) # not included in model
-    E_fd, L_fd = est_cost_CONV_layerinputfetch_contpow(layer, params_exec, plat_cost_profile)    
+    E_fd, L_fd = est_cost_CONV_layerinputfetch_contpow(layer, params_exec, plat_cost_profile)    # read from NVM
     E_cp, L_cp = est_cost_CONV_layercomp_contpow(layer, params_exec, plat_cost_profile)
-    E_bd, L_bd = est_cost_CONV_layeroutputbackup_contpow(layer, params_exec, plat_cost_profile) 
+    E_bd, L_bd = est_cost_CONV_layeroutputbackup_contpow(layer, params_exec, plat_cost_profile)  # write to NVM
     # no tile indeces fetching/preserving in this model (cont pow)
     
     cost_breakdown={

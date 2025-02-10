@@ -3,7 +3,6 @@ import random
 
 from settings import Settings
 
-# adapted from:
 # https://www.tutorialspoint.com/genetic_algorithms/genetic_algorithms_mutation.htm
 
 class MutationOperator:

@@ -1,6 +1,6 @@
 {
     "GLOBAL_SETTINGS": {
-        "EXP_SUFFIX": "TiNAS-M-test"
+        "EXP_SUFFIX": "TiNAS-M"
     },
     "PLATFORM_SETTINGS": {
         "IMC_CONSTRAINT": 30

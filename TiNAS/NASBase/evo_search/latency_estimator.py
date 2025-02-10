@@ -150,3 +150,17 @@ class LatencyEstimator(object):
     
 
 
+
+# class LatencyTable:
+#     def __init__(self, device='note10', resolutions=(160, 176, 192, 208, 224)):
+#         self.latency_tables = {}
+
+#         for image_size in resolutions:
+#             self.latency_tables[image_size] = LatencyEstimator(
+#                 url='https://hanlab.mit.edu/files/OnceForAll/tutorial/latency_table@%s/%d_lookup_table.yaml' % (
+#                     device, image_size)
+#             )
+#             print('Built latency table for image size: %d.' % image_size)
+
+#     def predict_efficiency(self, spec: dict):
+#         return self.latency_tables[spec['r'][0]].predict_network_latency_given_spec(spec)

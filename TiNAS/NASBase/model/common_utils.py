@@ -8,19 +8,24 @@ from os.path import dirname, realpath, join
 
 import torch
 import torch.nn as nn
+from torch.utils.data import Dataset
 import torchvision
 from torchinfo import summary
 import inspect
 import itertools
+import pathlib
 
 import pandas as pd
+import platformdirs
 from torch.utils.data import TensorDataset
 import torchvision.transforms.functional
+import torchaudio
+from torchaudio.transforms import MFCC
 
-from settings import Settings
+from settings import Settings, parse_and_apply_saved_settings
 
 from .common_types import LAYERTYPES, OPTYPES, Mat
-from .. import utils
+from .. import utils, multiprocessing_helper as mp_helper
 
 from .mnas_arch import MNASSubNet, MNASSuperNet
 
@@ -767,11 +772,22 @@ def split_list_chunks(lst, num_chunks):
     for i in range(0, len(lst), chunk_size):
         yield lst[i:i + chunk_size]
 
+def split_list_chunks_unbalanced(lst, num_chunks):
+    chunk_size, remaining = divmod(len(lst), num_chunks)
+    for i in range(0, remaining * (chunk_size + 1), chunk_size + 1):
+        yield lst[i:i + chunk_size + 1]
+    for i in range(remaining * (chunk_size + 1), len(lst), chunk_size):
+        yield lst[i:i + chunk_size]
 
-def get_sampled_subnet_configs(global_settings, dataset, supernet_blk_choices, n_rnd_samples=None):    
-    if dataset in ['CIFAR10', 'HAR', 'KWS']:
+#@TODO: This version is too slow for large search spaces - remove in future - bad implementation
+def get_sampled_subnet_configs(global_settings, dataset, supernet_blk_choices, custom_choices_per_block=None, n_rnd_samples=None):    
+    if dataset in ['CIFAR10', 'HAR', 'MSWC']:
         num_blocks  = global_settings.NAS_SETTINGS_PER_DATASET[dataset]['NUM_BLOCKS']    
-        choices_per_block = [list(x) for x in itertools.product(supernet_blk_choices, repeat=num_blocks)]        
+        
+        if custom_choices_per_block == None:
+            choices_per_block = [list(x) for x in itertools.product(supernet_blk_choices, repeat=num_blocks)]        
+        else:
+            choices_per_block = custom_choices_per_block
         
         if n_rnd_samples != None:
             result = random.sample(choices_per_block, n_rnd_samples)
@@ -784,7 +800,25 @@ def get_sampled_subnet_configs(global_settings, dataset, supernet_blk_choices, n
         
 
 
+def get_sampled_subnet_configs_v2(global_settings, dataset, supernet_blk_choices, n_rnd_samples=None):    
+    if dataset in ['CIFAR10', 'HAR', 'MSWC']:
+        num_blocks  = global_settings.NAS_SETTINGS_PER_DATASET[dataset]['NUM_BLOCKS']    
+        batch_subnet_configs = []
+        
+        for batch_ix in range(n_rnd_samples):
+            subnet_config = [] # one subnet
+            for block_idx in range(num_blocks): # for each block get a random choice                
+                block_config = random.choice(supernet_blk_choices)
+                subnet_config.append(block_config)
+        
+            batch_subnet_configs.append(subnet_config)
+        return batch_subnet_configs
+        
+    else:
+        sys.exit(inspect.currentframe().f_code.co_name+"::Error - unknown dataset, " + dataset)
+        
     
+
     
     
 
@@ -794,7 +828,7 @@ def get_subnet(global_settings, dataset, blk_choices, subnet_choice_per_blk_ixs,
                subnet_name=None,
                ):    
     
-    if dataset in ('CIFAR10', 'HAR', 'KWS'):
+    if dataset in ('CIFAR10', 'HAR', 'MSWC'):
     
         num_blocks  = global_settings.NAS_SETTINGS_PER_DATASET[dataset]['NUM_BLOCKS']
         num_classes = global_settings.NAS_SETTINGS_PER_DATASET[dataset]['NUM_CLASSES']
@@ -846,16 +880,36 @@ def get_subnet_from_config(global_settings: Settings, dataset, net_config, super
     
 def get_supernet(global_settings, dataset, 
                  load_state=False, supernet_train_chkpnt_fname=None,
-                 width_multiplier=1.0, input_resolution=32, blk_choices=None):    
+                 width_multiplier=1.0, input_resolution=32, blk_choices=None,
+                 merge_settings_categories_from_state=None):    
     
-    if dataset in ('CIFAR10', 'HAR', 'KWS'):
+    if dataset in ('CIFAR10', 'HAR', 'MSWC'):
+        if load_state:
+            try:
+                pth_data = torch.load(supernet_train_chkpnt_fname, map_location='cpu')
+            except FileNotFoundError:
+                print(f'Warning: skipping loading {supernet_train_chkpnt_fname} as it is missing')
+                pth_data = {}
+                load_state = False
+
+            if 'settings' in pth_data and merge_settings_categories_from_state:
+                parse_and_apply_saved_settings(global_settings, pth_data['settings'], categories_to_update=merge_settings_categories_from_state)
+
         block_out_channels =  [round_to_nearest_even_num(width_multiplier * c) for c in global_settings.NAS_SETTINGS_PER_DATASET[dataset]['OUT_CH_PER_BLK']]
         model = MNASSuperNet(global_settings, dataset, block_out_channels, blk_choices=blk_choices, net_choices=(width_multiplier, input_resolution))
         
         if (load_state):
             # load model from checkpoint        
             #ckpt_fname = global_settings.NAS_SETTINGS_GENERAL['CHECKPOINT_DIR'] + supernet_train_chkpnt_fname            
-            model.load_state_dict(torch.load(supernet_train_chkpnt_fname, map_location='cpu'))
+
+            # New checkpoint format with metadata (ex: global settings)
+            model_state_dict = pth_data['model'] if 'model' in pth_data else pth_data
+
+            # There is a "module." prefix if multi-GPU training is applied
+            # The code is from a similar issue at https://discuss.pytorch.org/t/prefix-parameter-names-in-saved-model-if-trained-by-multi-gpu/494
+            model_state_dict = {k.partition('module.')[2]: v for k,v in model_state_dict.items()}
+
+            model.load_state_dict(model_state_dict)
     
     else:
         sys.exit(inspect.currentframe().f_code.co_name+"::Error - unknown dataset, " + dataset)
@@ -913,6 +967,176 @@ def _har_standardize(train, test):
     X_test = (test - np.mean(test, axis=0)[None,:,:]) / np.std(test, axis=0)[None,:,:]
 
     return X_train, X_test
+
+# Custom MSWC (Multilingual Spoken Words corpus) with MFCC preprocessing, padding, and caching
+# https://mlcommons.org/datasets/multilingual-spoken-words/
+# Based on https://github.com/V0XNIHILI/torch-mate/blob/c72b7ec6bbdffa32bf7956ca89e121ffb5d00542/src/torch_mate/data/datasets/MSWC.py
+class CustomMSWC(Dataset):
+    SAMPLE_RATE = 48000 # sample rate for raw opus files
+    AUDIO_LENGTH = 1  # All samples are not longer than 1 second
+
+    def _mfcc_worker(self, worker_id, worker_args):
+        for cur_word_paths, label in worker_args:
+            mfcc_tensor = torch.empty(len(cur_word_paths), 1, self.input_resolution, self.input_resolution)
+            label_tensor = torch.empty(len(cur_word_paths))
+
+            lang, word = label.split('_')
+
+            for idx, p in enumerate(cur_word_paths):
+                full_path = os.path.join(self.root, lang, "clips", p)
+                waveform, sample_rate = torchaudio.load(full_path)
+                assert sample_rate == self.SAMPLE_RATE
+
+                waveform = nn.functional.pad(waveform, pad=[0, self.AUDIO_LENGTH * sample_rate - waveform.shape[1], 0, 0], value=0)
+
+                mfcc_features = self.mfcc_transform(waveform)
+
+                # Pad to make the area match the input square
+                mfcc_features = nn.functional.pad(mfcc_features, pad=self.preprocessing_parameters['PADDINGS'], value=0)
+
+                mfcc_tensor[idx] = mfcc_features
+                label_tensor[idx] = self.all_labels.index(label)
+
+            torch.save({
+                'mfcc_features': mfcc_tensor,
+                'labels': label_tensor,
+            }, os.path.join(self.cache_root, f'{lang}_{self.split}_{word}.pt'))
+
+    def __init__(self, *, global_settings, dataset, root, cache_root, split, input_resolution, all_labels=None, transform=None):
+        self.root = root
+        self.cache_root = cache_root
+        self.split = split
+        self.input_resolution = input_resolution
+        self.preprocessing_parameters = global_settings.NAS_SETTINGS_PER_DATASET[dataset]['PREPROCESSING_PARAMETERS']
+        self.transform = transform
+        subset = global_settings.NAS_SETTINGS_PER_DATASET[dataset]['PREPROCESSING_PARAMETERS']['SUBSET']
+
+        # ---------------------------
+        # Preparing for preprocessing
+        # ---------------------------
+
+        # Convert milliseconds to number of samples
+        frame_length = int(self.SAMPLE_RATE * (self.preprocessing_parameters['WINDOW_MS'] / 1000))
+        frame_step = int(self.SAMPLE_RATE * (self.preprocessing_parameters['STRIDE_MS'] / 1000))
+
+        # Next power of 2
+        # https://github.com/tensorflow/tensorflow/blob/v2.18.0/tensorflow/core/kernels/spectrogram.cc#L62
+        n_fft = 2**math.ceil(math.log2(frame_length))
+
+        self.mfcc_transform = MFCC(
+            sample_rate=self.SAMPLE_RATE,
+            n_mfcc=self.preprocessing_parameters['N_MFCC'],
+            melkwargs={
+                "n_fft": n_fft,
+                "hop_length": frame_step,
+                "win_length": frame_length,
+                "n_mels": self.preprocessing_parameters['N_MELS'],
+                "mel_scale": "htk"
+            },
+        )
+
+        # -------------
+        # Load data
+        # -------------
+        self._mfcc_walker = None
+        self._label_walker = None
+        self.all_labels = all_labels if all_labels is not None else []
+
+        for lang, top_n in subset.items():
+            lang_word_freq = {}
+            word_paths = {}
+
+            with open(os.path.join(root, lang, f'{lang}_{split}.csv'), 'r') as f:
+                for line in f:
+                    path, word, valid, _, _ = line.strip().split(',')
+
+                    # Skip header or invalid samples
+                    if word == "WORD" or valid == "False":
+                        continue
+
+                    if word not in lang_word_freq:
+                        lang_word_freq[word] = 1
+                    else:
+                        lang_word_freq[word] += 1
+
+                    if word not in word_paths:
+                        word_paths[word] = [path]
+                    else:
+                        word_paths[word].append(path)
+
+            lang_word_freq_list = [(label.split('_')[1], None) for label in self.all_labels if label.startswith(f'{lang}_')]
+            if not lang_word_freq_list:
+                # Pick top_n most common words
+                lang_word_freq_list = sorted(
+                    lang_word_freq.items(),
+                    key=lambda word_freq: word_freq[1],
+                    reverse=True,
+                )[:top_n]
+
+                self.all_labels.extend(f'{lang}_{word}' for word, _ in lang_word_freq_list)
+
+            worker_args = []
+            for word, _ in lang_word_freq_list:
+                if not os.path.exists(os.path.join(self.cache_root, f'{lang}_{split}_{word}.pt')):
+                    worker_args.append((word_paths[word], f'{lang}_{word}'))
+
+            if worker_args:
+                num_workers = min(len(worker_args), global_settings.NAS_SETTINGS_PER_DATASET[dataset]['PREPROCESSING_PARAMETERS']['NUM_WORKERS'])
+                mp_helper.run_multiprocessing_workers(
+                    num_workers=num_workers,
+                    worker_func=self._mfcc_worker,
+                    worker_type="CPU",
+                    common_args=(),
+                    worker_args=list(split_list_chunks_unbalanced(worker_args, num_workers)),
+                )
+
+            for word, _ in lang_word_freq_list:
+                cache_path = os.path.join(self.cache_root, f'{lang}_{split}_{word}.pt')
+                o = torch.load(cache_path)
+                new_mfcc_tensor = o['mfcc_features']
+                new_label_tensor = o['labels']
+
+                if self._mfcc_walker is not None:
+                    self._mfcc_walker = torch.cat([self._mfcc_walker, new_mfcc_tensor])
+                else:
+                    self._mfcc_walker = new_mfcc_tensor
+                if self._label_walker is not None:
+                    self._label_walker = torch.cat([self._label_walker, new_label_tensor])
+                else:
+                    self._label_walker = new_label_tensor
+
+        self._mfcc_walker.share_memory_()
+        self._label_walker.share_memory_()
+
+    def __getitem__(self, n):
+        mfcc = self._mfcc_walker[n]
+        if self.transform is not None:
+            mfcc = self.transform(mfcc)
+        return mfcc, self._label_walker[n]
+
+    def __len__(self):
+        return self._mfcc_walker.shape[0]
+
+def get_raw_dataset(global_settings: Settings, dataset, input_resolution, **kwargs):
+    assert dataset == 'MSWC'
+
+    xdg_cache_home = platformdirs.user_cache_path()
+    kwargs.update({
+        'global_settings': global_settings,
+        'dataset': dataset,
+        'root': xdg_cache_home / 'mswc',
+        'cache_root': xdg_cache_home / 'mswc_cache',
+        # 'root': xdg_cache_home / 'mswc_microset',
+        # 'cache_root': xdg_cache_home / 'mswc_microset_cache',
+        'input_resolution': input_resolution,
+    })
+
+    trainset = CustomMSWC(split='train', **kwargs)
+    valset = CustomMSWC(split='dev', **kwargs, all_labels=trainset.all_labels)
+
+    print('CustomMSWC train set size=%d, val set size=%d' % (len(trainset), len(valset)))
+
+    return trainset, valset
 
 def get_dataset(global_settings: Settings, dataset = None, input_resolution=None, num_workers=8, trainset_batchsize=None):
     if (dataset == None):
@@ -979,9 +1203,7 @@ def get_dataset(global_settings: Settings, dataset = None, input_resolution=None
                                                  shuffle=False, pin_memory=True, num_workers=num_workers)
 
     
-    elif dataset == 'KWS':
-        raise ValueError("common_utils:get_dataset:: Error - KWS not implemented yet")  # TODO_KWS
-    
+    elif dataset == 'MSWC':
         
         # # Set data's parameters
         # kwargs = {'num_workers': 0, 'pin_memory': True} if self.device == 'cuda' else {}
@@ -994,9 +1216,18 @@ def get_dataset(global_settings: Settings, dataset = None, input_resolution=None
         # # Load test data
         # val_loader = torch.utils.data.DataLoader(SpeechCommandsDataset(split='test', 
         #                                                                window_stride_ms=20, background_frequency=0, background_volume_range=0), 
-        #                                                                 batch_size=global_settings.NAS_SETTINGS_PER_DATASET['KWS']['VAL_BATCHSIZE'],
+        #                                                                 batch_size=global_settings.NAS_SETTINGS_PER_DATASET['MSWC']['VAL_BATCHSIZE'],
         #                                                                 shuffle=True, **kwargs)
-        
+
+        xdg_cache_home = platformdirs.user_cache_path()
+
+        valset = CustomMSWC(global_settings=global_settings, dataset=dataset, split='dev',
+                            root=xdg_cache_home / 'mswc', cache_root=xdg_cache_home / 'mswc_cache',
+                            input_resolution=input_resolution, transform=train_transform)
+        val_loader = torch.utils.data.DataLoader(valset, batch_size=global_settings.NAS_SETTINGS_PER_DATASET['MSWC']['VAL_BATCHSIZE'],
+                                                shuffle=True, pin_memory=True, num_workers=num_workers)
+
+        train_loader = None
     
     else:
         raise ValueError("common_utils:get_dataset:: Error - unknown dataset : " + str(dataset))

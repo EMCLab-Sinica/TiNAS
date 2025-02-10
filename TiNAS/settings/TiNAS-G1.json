@@ -1,6 +1,6 @@
 {
     "GLOBAL_SETTINGS": {
-        "EXP_SUFFIX": "TiNAS-test"
+        "EXP_SUFFIX": "TiNAS-G1-only"
     },
     "PLATFORM_SETTINGS": {
         "IMC_CONSTRAINT": 0
@@ -18,7 +18,7 @@
         },
         "STAGE2_SETTINGS": {
             "BLOCK_SEARCH_SPACE": "dropped",
-            "MUTATION_OPERATOR": "mutate_adaptive"
+            "MUTATION_OPERATOR": "mutate_default"
         }
     }
 }

@@ -11,11 +11,11 @@ from settings import Settings, Stages, arg_parser, CURRENT_HOME_PATH
 from NASBase import file_utils, utils
 from NASBase.run_nas import run_nas
 
-SEARCH_PARENT_RATIO = [0.1, 0.2, 0.3]
+SEARCH_PARENT_RATIO = [0.1, 0.2, 0.3]   # use the same as MCUNet     
 SEARCH_MUT_PROB = [0.1, 0.2, 0.3]
 SEARCH_MUT_RATIO = [0.25, 0.5, 0.75]
 
-#SEARCH_PARENT_RATIO = [0.1]   
+#SEARCH_PARENT_RATIO = [0.1]   # use the same as MCUNet     
 #SEARCH_MUT_PROB = [0.1]
 #SEARCH_MUT_RATIO = [0.25]
 

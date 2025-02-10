@@ -10,6 +10,8 @@ from pathlib import Path
 #from misc import output_error_msg
 import numpy as np
 
+from settings import Settings
+
 # class CustomEncoder(json.JSONEncoder):
 #     def default(self, obj):
 #         if isinstance(obj, np.ndarray):
@@ -50,6 +52,11 @@ class CustomEncoder(json.JSONEncoder):
 
 # -- dump json output --
 def json_dump(fname, data, indent=4):
+    global_settings = Settings()
+    if global_settings.NAS_SETTINGS_GENERAL['SEARCH_TIME_TESTING']:
+        print(f'Testing search time, skipping saving json data to {fname}')
+        return
+
     # delete file if exists
     if os.path.exists(fname):
         os.remove(fname)
@@ -89,12 +96,22 @@ def open_file(fname):
 
 
 def write_file(fname, data):
+    global_settings = Settings()
+    if global_settings.NAS_SETTINGS_GENERAL['SEARCH_TIME_TESTING']:
+        print(f'Testing search time, skipping saving data to {fname}')
+        return
+
     f = open(fname, "wt")
     f.write(data)
     f.close()
 
 
 def delete_file(fname):
+    global_settings = Settings()
+    if global_settings.NAS_SETTINGS_GENERAL['SEARCH_TIME_TESTING']:
+        print(f'Testing search time, skipping removing file {fname}')
+        return
+
     if os.path.exists(fname):
         os.remove(fname)
     else:
@@ -139,6 +156,11 @@ def get_dir_filelist(dirname):
 
 # -- pickle handling
 def pickle_dump(fname, data):
+    global_settings = Settings()
+    if global_settings.NAS_SETTINGS_GENERAL['SEARCH_TIME_TESTING']:
+        print(f'Testing search time, skipping saving pickle data to {fname}')
+        return
+
     with open(fname, 'wb') as file: 
         pickle.dump(data, file)    # serialize
         

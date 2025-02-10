@@ -1,10 +1,13 @@
 import csv
 from datetime import datetime
+import faulthandler
 import logging
 import math
 import os
 import random
+import signal
 import time
+import traceback
 
 #import matplotlib.pyplot as plt
 import numpy as np
@@ -120,8 +123,14 @@ def data_transforms(dataset, input_resolution=None, cutout=False):
         train_transform = None
         valid_transform = None
 
-    elif dataset == 'KWS':
-        raise ValueError("utils:dataset:: Error - KWS not implemented yet")  # TODO_KWS
+    elif dataset == 'MSWC':
+
+        if input_resolution != 52:
+            train_transform = transforms.Resize(size=(input_resolution, input_resolution))
+            valid_transform = transforms.Resize(size=(input_resolution, input_resolution))
+        else:
+            train_transform = None
+            valid_transform = None
         
     elif dataset == 'IMAGENET':
         # MEAN = [0.485, 0.456, 0.406]
@@ -281,3 +290,12 @@ def count_changes(arr):
         last = item
     #print(changes)
     return changes
+
+def enable_debug():
+    faulthandler.enable()
+    signal.signal(signal.SIGUSR1, debug)
+
+# Print the current stack trace on demand to identify performance bottlenecks
+# https://stackoverflow.com/questions/132058/showing-the-stack-trace-from-a-running-python-application
+def debug(sig, frame):
+    traceback.print_stack(frame)
